@@ -54,11 +54,15 @@ namespace ReadDll
 
             stream = new ByteArrayStream(instrunctions);
 
-			if (!(method.GetType() == typeof(ConstructorInfo)))
-				methodArgs = method.GetGenericArguments();
+            if (!(method is ConstructorInfo))
+            {
+                methodArgs = method.GetGenericArguments();
+            }
 
-			if (method.DeclaringType != null)
-				typeArgs = method.DeclaringType.GetGenericArguments();
+            if (method.DeclaringType != null)
+            {
+                typeArgs = method.DeclaringType.GetGenericArguments();
+            }
 
 			IlInstruction instruction = null;
 
@@ -122,7 +126,7 @@ namespace ReadDll
 					break;
 				case OperandType.InlineString:
 					operand = module.ResolveString(stream.ReadInt32());
-					break;
+                    break;
 				case OperandType.InlineTok:
 				case OperandType.InlineType:
 				case OperandType.InlineMethod:

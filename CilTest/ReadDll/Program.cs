@@ -5,28 +5,50 @@ namespace ReadDll
 {
     class MainClass
     {
-        public static void Main(string[] args)
+        public static void Main(string[] aArgs)
         {
-            var path = args[0];
+            var path = aArgs[0];
             var asm = Assembly.LoadFrom(path);
             var reader = new IlReader();
             foreach(var mod in asm.Modules)
 			{
+                Console.WriteLine("Module: {0}", mod.FullyQualifiedName);
 				foreach (var type in mod.GetTypes())
 				{
-                    foreach (var method in type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
-					{
-						Console.WriteLine("-----------------");
-                        Console.WriteLine("{0}:", method.Name);
-                        if (method.DeclaringType.FullName == "System.Object")
+                    Console.WriteLine("  Type: {0}", type.FullName);
+                    foreach (var ctor in type.GetConstructors())
+                    {
+                        string args = "";
+                        foreach (var arg in ctor.GetParameters())
                         {
-                            continue;
+                            if (args != "")
+                            {
+                                args += ",";
+                            }
+                            args += arg.ParameterType.FullName;
                         }
-						var instructions = reader.ReadInstructions(method);
-						foreach (var inst in instructions)
-						{
-							Console.WriteLine("{0} {1}", inst.Name, inst.Operand);
-						}
+
+						Console.WriteLine("    Constructor: ({0})", args);
+                        {
+                            Console.WriteLine("      Instructions:");
+                            var instructions = reader.ReadInstructions(ctor);
+                            foreach (var inst in instructions)
+                            {
+                                Console.WriteLine("        {0} {1}", inst.Name, inst.Operand);
+                            }
+                        }
+                    }
+                    foreach (var method in type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Instance | BindingFlags.CreateInstance | BindingFlags.Public | BindingFlags.NonPublic))
+					{
+                        Console.WriteLine("    Method: {0}", method.Name);
+                        {
+                            Console.WriteLine("      Instructions:");
+                            var instructions = reader.ReadInstructions(method);
+                            foreach (var inst in instructions)
+                            {
+                                Console.WriteLine("        {0} {1}", inst.Name, inst.Operand);
+                            }
+                        }
 					}
                     
                 }
