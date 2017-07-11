@@ -15,7 +15,6 @@ namespace DllToXml
         {
             var path = aArgs[0];
             var asm = Assembly.LoadFrom(path);
-            var reader = new IlReader();
 
             {
                 var dll = DataSet.Assembly.Create(asm);
@@ -49,7 +48,7 @@ namespace DllToXml
                         Console.WriteLine("    Constructor: ({0})", args);
                         {
                             Console.WriteLine("      Instructions:");
-                            var instructions = reader.ReadInstructions(ctor);
+                            var instructions = IlReader.ReadInstructions(ctor);
                             foreach (var inst in instructions)
                             {
                                 Console.WriteLine("        {0} {1}", inst.Name, inst.Operand);
@@ -61,7 +60,7 @@ namespace DllToXml
                         Console.WriteLine("    Method: {0}", method.Name);
                         {
                             Console.WriteLine("      Instructions:");
-                            var instructions = reader.ReadInstructions(method);
+                            var instructions = IlReader.ReadInstructions(method);
                             foreach (var inst in instructions)
                             {
                                 Console.WriteLine("        {0} {1}", inst.Name, inst.Operand);

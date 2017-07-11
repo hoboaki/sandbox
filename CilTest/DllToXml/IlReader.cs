@@ -7,6 +7,16 @@ namespace DllToXml
 {
     public class IlReader
     {
+        public static List<DataSet.Instruction> ReadInstructions(MethodBase method)
+        {
+            if (instance == null)
+            {
+                instance = new IlReader();
+            }
+            return instance._ReadInstructions(method);
+        }
+
+        private static IlReader instance = null;
         private ByteArrayStream stream;
         private OpCode[] singleByteOpCode;
         private OpCode[] doubleByteOpCode;
@@ -18,7 +28,7 @@ namespace DllToXml
         private MethodBase currentMethod = null;
         private List<DataSet.Instruction> ilInstructions = null;
 
-        public IlReader()
+        private IlReader()
         {
             CreateOpCodes();
         }
@@ -44,7 +54,7 @@ namespace DllToXml
             }
         }
 
-        public List<DataSet.Instruction> ReadInstructions(MethodBase method)
+        List<DataSet.Instruction> _ReadInstructions(MethodBase method)
         {
             ilInstructions = new List<DataSet.Instruction>();
             this.currentMethod = method;
@@ -64,11 +74,10 @@ namespace DllToXml
                 typeArgs = method.DeclaringType.GetGenericArguments();
             }
 
-            DataSet.Instruction instruction = null;
-
             while (stream.Position < stream.Length)
             {
-                instruction = new DataSet.Instruction();
+                var instruction = new DataSet.Instruction();
+                instruction.Offset = stream.Position;
 
                 OpCode code = ReadOpCode();
                 instruction.Operand = ReadOperand(code, method.Module);

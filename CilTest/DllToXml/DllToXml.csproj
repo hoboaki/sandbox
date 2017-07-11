@@ -45,7 +45,9 @@
   <ItemGroup>
     <Compile Include="ByteArrayStream.cs" />
     <Compile Include="DataSet\Assembly.cs" />
+    <Compile Include="DataSet\Constructor.cs" />
     <Compile Include="DataSet\Instruction.cs" />
+    <Compile Include="DataSet\Method.cs" />
     <Compile Include="DataSet\Module.cs" />
     <Compile Include="DataSet\Type.cs" />
     <Compile Include="IlReader.cs" />
