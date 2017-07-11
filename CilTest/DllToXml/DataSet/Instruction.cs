@@ -1,7 +1,7 @@
 ﻿using System;
-namespace ReadDll
+namespace DllToXml.DataSet
 {
-    public class IlInstruction
+    public class Instruction
     {
         public string Name { get; set; }
         public object Operand { get; set; }
