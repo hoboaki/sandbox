@@ -173,7 +173,8 @@ namespace DllToXml
             if (!currentMethod.IsStatic)
                 index--;
 
-            return parameters[index];
+            //return parameters[index];
+            return index;
         }
 
         private FieldInfo[] GetOpCodeFields()

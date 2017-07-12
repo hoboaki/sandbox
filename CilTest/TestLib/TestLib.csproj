@@ -32,9 +32,12 @@
   <ItemGroup>
     <Compile Include="BinaryOpExpression.cs" />
     <Compile Include="HelloWorld.cs" />
+    <Compile Include="PostfixExpression.cs" />
+    <Compile Include="PrefixExpression.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Constructor.cs" />
     <Compile Include="ConstructoExtend.cs" />
+    <Compile Include="Vec2field.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DllToXml.csproj" />

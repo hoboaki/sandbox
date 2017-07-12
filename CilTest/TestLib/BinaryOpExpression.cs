@@ -46,15 +46,15 @@ namespace TestLib
             return aA0 != aA1;
         }
 
-        //public static bool IdentityEqual(object aA0, object aA1)
-        //{
-        //    return aA0 is aA1;
-        //}
+        public static TType ObjectAs<TType>(object aA0) where TType : class
+        {
+            return aA0 as TType;
+        }
 
-        //public static bool IdentityNotEqual(object aA0, object aA1)
-        //{
-        //    return aA0 != aA1;
-        //}
+        public static bool ObjectIs<TType>(object aA0)
+        {
+            return aA0 is TType;
+        }
 
         public static bool LogicalAnd(bool aA0, bool aA1)
         {
