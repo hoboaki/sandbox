@@ -12,17 +12,28 @@ namespace DllToXml.DataSet
         //------------------------------------------------------------------------------
         public static Constructor Create(ConstructorInfo aNative)
         {
-            var Constructor = new Constructor();
+            var ctor = new Constructor();
 
-            Constructor.Name = aNative.Name;
-            Constructor._Instructions = IlReader.ReadInstructions(aNative);
+            ctor.Name = aNative.Name;
+            ctor._Instructions = IlReader.ReadInstructions(aNative);
 
-            return Constructor;
+            foreach (var param in aNative.GetParameters())
+            {
+                ctor._Parameters.Add(Parameter.Create(param));
+            }
+
+            return ctor;
         }
 
         //------------------------------------------------------------------------------
         [System.Xml.Serialization.XmlAttribute("name")]
         public string Name { get; set; }
+
+        //------------------------------------------------------------------------------
+        [System.Xml.Serialization.XmlArray("parameters")]
+        [System.Xml.Serialization.XmlArrayItem("parameter")]
+        public List<Parameter> Parameters { get { return _Parameters; } }
+        List<Parameter> _Parameters = new List<Parameter>();
 
         //------------------------------------------------------------------------------
         [System.Xml.Serialization.XmlArray("instructions")]

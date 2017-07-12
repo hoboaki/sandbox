@@ -17,12 +17,23 @@ namespace DllToXml.DataSet
             method.Name = aNative.Name;
             method._Instructions = IlReader.ReadInstructions(aNative);
 
+            foreach(var param in aNative.GetParameters())
+            {
+                method._Parameters.Add(Parameter.Create(param));
+            }
+
             return method;
         }
 
         //------------------------------------------------------------------------------
         [System.Xml.Serialization.XmlAttribute("name")]
         public string Name { get; set; }
+
+        //------------------------------------------------------------------------------
+        [System.Xml.Serialization.XmlArray("parameters")]
+        [System.Xml.Serialization.XmlArrayItem("parameter")]
+        public List<Parameter> Parameters { get { return _Parameters; } }
+        List<Parameter> _Parameters = new List<Parameter>();
 
         //------------------------------------------------------------------------------
         [System.Xml.Serialization.XmlArray("instructions")]
