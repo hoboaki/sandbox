@@ -26,50 +26,6 @@ namespace DllToXml
                     Console.WriteLine(writer.ToString());
                 }
             }
-
-            foreach (var mod in asm.Modules)
-            {
-                Console.WriteLine("Module: {0}", mod.FullyQualifiedName);
-                foreach (var type in mod.GetTypes())
-                {
-                    Console.WriteLine("  Type: {0}", type.FullName);
-                    foreach (var ctor in type.GetConstructors())
-                    {
-                        string args = "";
-                        foreach (var arg in ctor.GetParameters())
-                        {
-                            if (args != "")
-                            {
-                                args += ",";
-                            }
-                            args += arg.ParameterType.FullName;
-                        }
-
-                        Console.WriteLine("    Constructor: ({0})", args);
-                        {
-                            Console.WriteLine("      Instructions:");
-                            var instructions = IlReader.ReadInstructions(ctor);
-                            foreach (var inst in instructions)
-                            {
-                                Console.WriteLine("        {0} {1}", inst.Name, inst.Operand);
-                            }
-                        }
-                    }
-                    foreach (var method in type.GetMethods(BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Instance | BindingFlags.CreateInstance | BindingFlags.Public | BindingFlags.NonPublic))
-                    {
-                        Console.WriteLine("    Method: {0}", method.Name);
-                        {
-                            Console.WriteLine("      Instructions:");
-                            var instructions = IlReader.ReadInstructions(method);
-                            foreach (var inst in instructions)
-                            {
-                                Console.WriteLine("        {0} {1}", inst.Name, inst.Operand);
-                            }
-                        }
-                    }
-
-                }
-            }
         }
     }
 }
