@@ -1,0 +1,55 @@
+# 文字コード：UTF-8
+PlatformSetting: 
+    # コードネーム（英小文字・ハイフンで構成）
+    Name: "ios-gles3"  
+    
+    # GUI上などで表示される名前（分かりやすさ優先）
+    DisplayName: "iOS-Gles3"  
+
+    # デフォルトのビルドターゲット
+    BuildTargetDefault: "iosemu"
+
+    # ビルドターゲット定義
+    BuildTargets:
+        # エミュレータ
+        -
+            # コードネーム（ロムファイル名に使用）
+            Name: "Mac"
+            
+            # 表示名（分かりやすさ優先）
+            DisplayName: "Mac(iOS-emu)"
+            
+            # 使用するビルドシステム
+            BuildSystem: "iosxcode7"
+            
+            # ビルドシステムに通知するオプション
+            BuildSystemOption:
+                Target: "iosemu"
+
+        # 実機
+        -
+            # コードネーム（ロムファイル名に使用）
+            Name: "iOS"
+            
+            # 表示名（分かりやすさ優先）
+            DisplayName: "iOS"
+            
+            # 使用するビルドシステム
+            BuildSystem: "iosxcode7"
+
+            # ビルドシステムに通知するオプション
+            BuildSystemOption:
+                Target: "ios"
+             
+    # Coreライブラリの定義
+    CoreLibrary:   
+        # 使用するCoreOsライブラリ
+        CoreOs: "iosos"
+
+        # 使用するCoreGfxライブラリ
+        CoreGfx: "iosgles3"
+
+        # 使用するCoreSndライブラリ
+        CoreSnd: "iosal"
+
+# EOF
