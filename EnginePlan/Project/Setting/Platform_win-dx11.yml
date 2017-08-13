@@ -1,0 +1,66 @@
+# 文字コード：UTF-8
+PlatformSetting: 
+    # コードネーム（英小文字・単語区切りハイフンで構成を推奨）
+    Name: "win-dx11"  
+    
+    # GUI上などで表示される名前（分かりやすさ優先）
+    DisplayName: "Win-Dx11"  
+
+    # デフォルトのビルドターゲット
+    BuildTargetDefault: "PC-Product"
+    
+    # ビルドターゲット定義
+    BuildTargets:
+        # 製品版
+        -
+            # コードネーム（ロムファイル名に使用）
+            Name: "PC-Product"
+            
+            # 表示名（分かりやすさ優先）
+            DisplayName: "PC（製品版）"
+
+            # 使用するビルドキット
+            BuildSystem: "winvs2015"
+
+            # ビルドキットに通知するオプション
+            BuildSystemOption:
+                Architecture: "x64"
+
+            # 追加コンパイル時パラメータ
+            CompileParam:
+                - "EDITION_PRODUCT"
+
+        # 体験版
+        -
+            # コードネーム（ロムファイル名に使用）
+            Name: "PC-Trial"
+            
+            # 表示名（分かりやすさ優先）
+            DisplayName: "PC（体験版）"
+
+            # 使用するビルドキット
+            BuildSystem: "winvs2015"
+
+            # ビルドキットに通知するオプション
+            BuildSystemOption:
+                Architecture: "x64"
+
+            # 追加コンパイル時パラメータ
+            CompileParam:
+                - "EDITION_TRIAL"
+
+    # Coreライブラリの定義
+    CoreLibrary:
+        # 使用するCoreOsライブラリ
+        # ["ap_win_os"(default)]
+        #CoreOs: "ap_winos"
+
+        # 使用するCoreGfxライブラリ
+        # ["ap_win_dx11"(default), "ap_win_gl330"]
+        #CoreGfx: "ap_win_dx11"
+
+        # 使用するCoreSndライブラリ
+        # ["ap_win_dxsnd"(default), "ap_win_al"]
+        #CoreSnd: "ap_win_dxsnd"
+
+# EOF

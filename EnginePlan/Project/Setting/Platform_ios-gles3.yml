@@ -1,13 +1,13 @@
 # 文字コード：UTF-8
 PlatformSetting: 
     # コードネーム（英小文字・ハイフンで構成）
-    Name: "ios-gles3"  
+    Name: "ios-gles300"  
     
     # GUI上などで表示される名前（分かりやすさ優先）
-    DisplayName: "iOS-Gles3"  
+    DisplayName: "iOS-GLES3"  
 
     # デフォルトのビルドターゲット
-    BuildTargetDefault: "iosemu"
+    BuildTargetDefault: "Mac"
 
     # ビルドターゲット定義
     BuildTargets:
@@ -20,11 +20,15 @@ PlatformSetting:
             DisplayName: "Mac(iOS-emu)"
             
             # 使用するビルドシステム
-            BuildSystem: "iosxcode7"
+            BuildSystem: "ios_xcode7"
             
             # ビルドシステムに通知するオプション
             BuildSystemOption:
-                Target: "iosemu"
+                BinTarget: "mac"
+
+            # 追加コンパイル時パラメータ
+            CompileParam:
+                - "MY_FLAG"
 
         # 実機
         -
@@ -35,21 +39,28 @@ PlatformSetting:
             DisplayName: "iOS"
             
             # 使用するビルドシステム
-            BuildSystem: "iosxcode7"
+            BuildSystem: "ios_xcode7"
 
             # ビルドシステムに通知するオプション
             BuildSystemOption:
-                Target: "ios"
+                BinTarget: "ap_ios"
              
+            # 追加コンパイル時パラメータ
+            CompileParam:
+                - "MY_FLAG"
+
     # Coreライブラリの定義
     CoreLibrary:   
         # 使用するCoreOsライブラリ
-        CoreOs: "iosos"
+        # ["ap_ios_os"(default)]
+        #CoreOs: "ap_ios_os"
 
         # 使用するCoreGfxライブラリ
-        CoreGfx: "iosgles3"
+        # ["ap_ios_gles300"(default), "ap_ios_metal"]
+        #CoreGfx: "ap_ios_gles300"
 
         # 使用するCoreSndライブラリ
-        CoreSnd: "iosal"
+        # ["ap_ios_al"(default)]
+        #CoreSnd: "ap_ios_al"
 
 # EOF
