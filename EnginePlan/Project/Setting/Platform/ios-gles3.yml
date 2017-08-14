@@ -20,7 +20,7 @@ PlatformSetting:
             DisplayName: "Mac(iOS-emu)"
             
             # 使用するビルドシステム
-            BuildSystem: "Ap.Ios.Build.Xcode7"
+            BuildSystem: "Ap.DevkitIos.Build.Xcode7"
             
             # ビルドシステムに通知するオプション
             BuildSystemOptions:
@@ -41,7 +41,7 @@ PlatformSetting:
             DisplayName: "iOS"
             
             # 使用するビルドシステム
-            BuildSystem: "Ap.Ios.Build.Xcode7"
+            BuildSystem: "Ap.DevkitIos.Build.Xcode7"
 
             # ビルドシステムに通知するオプション
             BuildSystemOptions:
@@ -54,17 +54,17 @@ PlatformSetting:
                 - "MY_FLAG"
 
     # Coreライブラリの定義
-    CoreLibrary:   
+    CoreLib:   
         # 使用するCoreOsライブラリ
-        # ["Ap.Ios.Os"(default)]
-        #CoreOs: "Ap.Ios.Os"
+        # ["Ap.DevkitIos.Os"(default)]
+        #CoreOs: "Ap.DevkitIos.Os"
 
         # 使用するCoreGfxライブラリ
-        # ["Ap.Ios.Gles300"(default), "Ap.Ios.Metal"]
-        #CoreGfx: "Ap.Ios.Gles300"
+        # ["Ap.DevkitIos.Gles300"(default), "Ap.DevkitIos.Metal"]
+        #CoreGfx: "Ap.DevkitIos.Gles300"
 
         # 使用するCoreSndライブラリ
-        # ["Ap.Ios.Snd.Al"(default)]
-        #CoreSnd: "Ap.Ios.Al"
+        # ["Ap.DevkitIos.Snd.Al"(default)]
+        #CoreSnd: "Ap.DevkitIos.Al"
 
 # EOF
