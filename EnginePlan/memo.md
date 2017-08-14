@@ -59,3 +59,19 @@ MyProject_170401-1120_Td_PC-Trial_AB0926
 - OpenGL
     - gl330 (version 3.3) gles300(version 3.0)
 
+## アセットのバイナリタイプ
+
+- Universal （OS・デバイス非依存）
+    - エンディアンだけ変わる。32bit64bitはひとまず64bit固定とする。
+    - UniversalLE
+    - UniversalBE
+- GraphicsResouce（Shader・Texture・VertexAttribute）
+    - CoreGfxのタイプによって生成物が変わりそう。
+    - WinDx11
+    - WinVk
+    - WinGl330
+    - IosGles300
+    - IosMtl
+    - MacGl330
+    - MacMtl
+    

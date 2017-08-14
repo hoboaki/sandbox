@@ -20,14 +20,16 @@ PlatformSetting:
             DisplayName: "Mac(iOS-emu)"
             
             # 使用するビルドシステム
-            BuildSystem: "ios_xcode7"
+            BuildSystem: "Ap.Ios.Build.Xcode7"
             
             # ビルドシステムに通知するオプション
-            BuildSystemOption:
-                BinTarget: "mac"
+            BuildSystemOptions:
+                - 
+                    Key: "BinTarget"
+                    Value: "mac"
 
             # 追加コンパイル時パラメータ
-            CompileParam:
+            CompileParams:
                 - "MY_FLAG"
 
         # 実機
@@ -39,28 +41,30 @@ PlatformSetting:
             DisplayName: "iOS"
             
             # 使用するビルドシステム
-            BuildSystem: "ios_xcode7"
+            BuildSystem: "Ap.Ios.Build.Xcode7"
 
             # ビルドシステムに通知するオプション
-            BuildSystemOption:
-                BinTarget: "ap_ios"
+            BuildSystemOptions:
+                - 
+                    Key: "BinTarget"
+                    Value: "ios"
              
             # 追加コンパイル時パラメータ
-            CompileParam:
+            CompileParams:
                 - "MY_FLAG"
 
     # Coreライブラリの定義
     CoreLibrary:   
         # 使用するCoreOsライブラリ
-        # ["ap_ios_os"(default)]
-        #CoreOs: "ap_ios_os"
+        # ["Ap.Ios.Os"(default)]
+        #CoreOs: "Ap.Ios.Os"
 
         # 使用するCoreGfxライブラリ
-        # ["ap_ios_gles300"(default), "ap_ios_metal"]
-        #CoreGfx: "ap_ios_gles300"
+        # ["Ap.Ios.Gles300"(default), "Ap.Ios.Metal"]
+        #CoreGfx: "Ap.Ios.Gles300"
 
         # 使用するCoreSndライブラリ
-        # ["ap_ios_al"(default)]
-        #CoreSnd: "ap_ios_al"
+        # ["Ap.Ios.Snd.Al"(default)]
+        #CoreSnd: "Ap.Ios.Al"
 
 # EOF

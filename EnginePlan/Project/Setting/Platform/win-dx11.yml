@@ -19,15 +19,14 @@ PlatformSetting:
             # 表示名（分かりやすさ優先）
             DisplayName: "PC（製品版）"
 
-            # 使用するビルドキット
-            BuildSystem: "winvs2015"
+            # 使用するビルドシステム
+            BuildSystem: "Ap.Win.Build.Vs2015"
 
             # ビルドキットに通知するオプション
-            BuildSystemOption:
-                Architecture: "x64"
+            BuildSystemOptions:
 
             # 追加コンパイル時パラメータ
-            CompileParam:
+            CompileParams:
                 - "EDITION_PRODUCT"
 
         # 体験版
@@ -38,29 +37,28 @@ PlatformSetting:
             # 表示名（分かりやすさ優先）
             DisplayName: "PC（体験版）"
 
-            # 使用するビルドキット
-            BuildSystem: "winvs2015"
+            # 使用するビルドシステム
+            BuildSystem: "Ap.Win.Build.Vs2015"
 
             # ビルドキットに通知するオプション
-            BuildSystemOption:
-                Architecture: "x64"
+            BuildSystemOptions:
 
             # 追加コンパイル時パラメータ
-            CompileParam:
+            CompileParams:
                 - "EDITION_TRIAL"
 
     # Coreライブラリの定義
     CoreLibrary:
         # 使用するCoreOsライブラリ
-        # ["ap_win_os"(default)]
-        #CoreOs: "ap_winos"
+        # ["Ap.Win.Os"(default)]
+        #CoreOs: "Ap.Win.Os"
 
         # 使用するCoreGfxライブラリ
-        # ["ap_win_dx11"(default), "ap_win_gl330"]
-        #CoreGfx: "ap_win_dx11"
+        # ["Ap.Win.Dx11"(default), "Ap.Win.Gl330"]
+        #CoreGfx: "Ap.Win.Dx11"
 
         # 使用するCoreSndライブラリ
-        # ["ap_win_dxsnd"(default), "ap_win_al"]
-        #CoreSnd: "ap_win_dxsnd"
+        # ["Ap.Win.Dxsnd"(default), "Ap.Win.Al"]
+        #CoreSnd: "Ap.Win.Dxsnd"
 
 # EOF
