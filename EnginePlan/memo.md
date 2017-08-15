@@ -36,20 +36,32 @@ MyProject_170401-1120_Td_PC-Trial_AB0926
 
 公式コードの名前空間。予約名扱いのためユーザーコードではこの名前空間以下にコードを書いてはいけない。
 
-- ae:: Ae. 共通コード層。いかなる環境でも通るコードを書くことを意識する層。
-- ap:: Ap. プラグインコード層。特定の環境で通るコードを書く層。
-- apf:: Apf. プラグイン共通コード層。プラグインコードで使い回される共通コードを書く層。（例：OpenGLの実装など）
+C++
+
+- ae:: 共通コード層。いかなる環境でも通るコードを書くことを意識する層。
+- ap:: プラグインコード層。
+- apf:: プラグイン共通コード層。プラグインコードで使い回される共通コードを書く層。（例：OpenGLの実装など）
 
 
-C#DLL
+C#
 
-- Ae  : スクリプトコードから参照できるコード置き場。
+- Ae Ap Apf  : スクリプトコードから参照できるコード置き場。(limited-cs)
 - Adk : スクリプトコードをのぞくC#コードから参照できるコード置き場。
+- AdkExt : プラグインによるAdk拡張。
 
 - ae   adel engine
 - ap   adel engine plugin
 - apf  adel engine plugin foundation
 - adk  adel engine development kit
+
+NativeCode(c++,objective-c) ae::* ap_* apf_*
+ScriptCode(limited-cs) Ae.* Ap.* Apf.*
+DevkitCode(cs) Adk.* AdkExt.*
+
+Universalアセットのプラグイン構成
+::ap_cut_scene::ScenePlayer
+Ap.CutScene.ScenePlayer
+AdkExt.CutScene.AssetCutScene
 
 ## 名前検討欄
 
@@ -105,12 +117,12 @@ C#DLL
     - Ae.Gfx.ResShader
 
 ```c#
-Adk.Engine.ActivePlatform.Gfx.Binarizer.FbxToResMdl()
-Adk.Engine.ActivePlatform.Gfx.Binarizer.TgaToResTex()
-Adk.Engine.ActivePlatform.Gfx.Binarizer.GlslToResShader(geom,vert,frag,comp)
+Adk.Devkit.ActivePlatform.Gfx.Binarizer.FbxToResMdl()
+Adk.Devkit.ActivePlatform.Gfx.Binarizer.TgaToResTex()
+Adk.Devkit.ActivePlatform.Gfx.Binarizer.GlslToResShader(env,geom,vert,frag,comp)
 
-// class Gl330 : Adk.PluginInterface.ICoreLibGfx
-Ap.DevkitWin.Gl330.Binarizer.GlslToResShader(...)
+// class CoreGfxGl330 : Adk.PluginInterface.ICoreLibGfx
+AdkExt.DevkitWin.CoreGfxGl330.Binarizer.GlslToResShader(...)
 ```
 
 ## プラグインでできること
@@ -123,18 +135,24 @@ Ap.DevkitWin.Gl330.Binarizer.GlslToResShader(...)
 - アセットタイプ の追加
 - 既存アセットタイプに独自パラメータの追加
 - エディタツールバーのメニュー追加
-
+- エディタサブウィンドウの追加
 
 # 用語
 
-- ネイティブコード
-    - 製品にのるコード。c++ objective-c などのコード。
-- スクリプトコード
-    - 製品にのるコード。エディタモード・アプリケーションモードの両方で動作するコード。限定されたC#コード。
-- コマンドラインモード
-    - ビルドやVcs、各アセットの変更などコマンドラインから各種操作するモード。
-- エディタモード
-    - エディタと通信しながらゲームを実行する実行モードの1種。
-- アプリケーションモード
-    - エディタと通信せずゲームを実行する実行モードの1種。
+- コード
+    - ネイティブコード NativeCode
+        - 製品にのるコード。(c++ objective-c)
+    - スクリプトコード ScriptCode
+        - 製品にのるコード。(limited-cs)
+    - 開発キットコード DevkitCode
+        - コマンドラインモードとエディタモードで動作するコード。（cs)
+- 実行モード
+    - コマンドラインモード
+        - ビルドやVcs、各アセットの変更などコマンドラインからプロジェクトを操作するモード。
+    - エディタモード
+        - エディタと通信しながらゲームを実行するモード。
+    - アプリケーションモード
+        - エディタと通信せずゲームを実行するモード。
+
+
 

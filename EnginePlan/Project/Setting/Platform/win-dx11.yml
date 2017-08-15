@@ -20,7 +20,7 @@ PlatformSetting:
             DisplayName: "PC（製品版）"
 
             # 使用するビルドシステム
-            BuildSystem: "Ap.DevkitWin.Build.Vs2015"
+            BuildSystem: "Adel.DevkitWin.Vs2015"
 
             # ビルドキットに通知するオプション
             BuildSystemOptions:
@@ -38,7 +38,7 @@ PlatformSetting:
             DisplayName: "PC（体験版）"
 
             # 使用するビルドシステム
-            BuildSystem: "Ap.DevkitWin.Build.Vs2015"
+            BuildSystem: "Adel.DevkitWin.Vs2015"
 
             # ビルドキットに通知するオプション
             BuildSystemOptions:
@@ -50,15 +50,15 @@ PlatformSetting:
     # Coreライブラリの定義
     CoreLib:
         # 使用するCoreOsライブラリ
-        # ["Ap.DevkitWin.Os"(default)]
-        #CoreOs: "Ap.DevkitWin.Os"
+        # ["Adel.DevkitWin.Os"(default)]
+        #CoreOs: "Adel.DevkitWin.Os"
 
         # 使用するCoreGfxライブラリ
-        # ["Ap.DevkitWin.Dx11"(default), "Ap.DevkitWin.Gl330"]
-        #CoreGfx: "Ap.DevkitWin.Dx11"
+        # ["Adel.DevkitWin.Dx11"(default), "Adel.DevkitWin.Gl330"]
+        #CoreGfx: "Adel.DevkitWin.Dx11"
 
         # 使用するCoreSndライブラリ
-        # ["Ap.DevkitWin.Dxsnd"(default), "Ap.DevkitWin.Al"]
-        #CoreSnd: "Ap.DevkitWin.Dxsnd"
+        # ["Adel.DevkitWin.Dxsnd"(default), "Adel.DevkitWin.Al"]
+        #CoreSnd: "Adel.DevkitWin.Dxsnd"
 
 # EOF
