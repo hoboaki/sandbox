@@ -38,6 +38,7 @@
     <Compile Include="Constructor.cs" />
     <Compile Include="ConstructoExtend.cs" />
     <Compile Include="Vec2field.cs" />
+    <Compile Include="AsyncAwait.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DllToXml.csproj" />
