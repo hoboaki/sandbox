@@ -10,3 +10,6 @@ run:
 	docker run -d -it -p 8080:5000 ${Name}
 .PHONY: run
 
+stop:
+	docker stop $(shell docker ps -a -q --filter ancestor=${Name} --format="{{.ID}}")
+.PHONY: stop
