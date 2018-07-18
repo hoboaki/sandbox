@@ -1,0 +1,12 @@
+{
+  "name": "HelloWorld",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "hello": "echo \"Hello!\""
+  },
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^2.0.5"
+  }
+}
