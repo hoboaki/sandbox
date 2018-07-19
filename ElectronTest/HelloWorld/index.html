@@ -1,19 +1,68 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-  </head>
-  <body style="-webkit-app-region: drag; -webkit-user-select: none;">
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
 
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Manage Built-in Extensions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="browser-main.js"></script>
+    <style>
+      .titlebar {
+        -webkit-user-select: none;
+        -webkit-app-region: drag;
+        -webkit-margin-before: 0px;
+        -webkit-margin-after: 0px;
+        background: #444; /* @todo アクティブ・非アクティブで色を変える */
+        text-align: center;
+        vertical-align: middle;
+        height: 1.8em; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        color: #CCC;
+        font-size: 9pt;
+      }
+
+      body {
+        margin: 0px;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        font-size: 10pt;
+        -webkit-app-region: drag; 
+        -webkit-user-select: none;
+      }
+
+      code {
+        font-family: 'Menlo', 'Courier New', 'Courier', monospace;
+      }
+
+      ul {
+        padding-left: 1em;
+      }
+
+      li {
+        list-style: none;
+        padding: 0.3em 0;
+      }
+
+      label {
+        margin-right: 1em;
+      }
+
+      form {
+        padding: 0.3em 0 0.3em 0.3em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="titlebar"><div>Title Text</div></div>
+    
     <script>
       // You can also require other files to run in this process
       require('./renderer.js')
     </script>
   </body>
+
 </html>
