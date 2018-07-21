@@ -6,11 +6,11 @@
         "type": "node",
         "request": "launch",
         "env": {"NODE_ENV": "development"},
-        "cwd": "${workspaceRoot}",
+        "cwd": "${workspaceRoot}/ElectronTest/HelloWorld",
         "runtimeExecutable": "${workspaceRoot}/ElectronTest/HelloWorld/node_modules/.bin/electron",
         "runtimeArgs": [
             "--remote-debugging-port=9223",
-            "./ElectronTest/HelloWorld"
+            "."
         ],
         "windows": {
           "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
