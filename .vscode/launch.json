@@ -2,17 +2,37 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Debug Main Process",
+        "name": "Electron: Main",
         "type": "node",
         "request": "launch",
         "env": {"NODE_ENV": "development"},
         "cwd": "${workspaceRoot}",
         "runtimeExecutable": "${workspaceRoot}/ElectronTest/HelloWorld/node_modules/.bin/electron",
+        "runtimeArgs": [
+            "--remote-debugging-port=9223",
+            "./ElectronTest/HelloWorld"
+        ],
         "windows": {
           "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
         },
         "protocol": "inspector",
-        "args" : ["./ElectronTest/HelloWorld"]
+      },
+      {
+          "name": "Electron: Renderer",
+          "type": "chrome",
+          "request": "attach",
+          "port": 9223,
+          "webRoot": "${workspaceRoot}/ElectronTest/HelloWorld",
+          "timeout": 30000
       }
+    ],
+    "compounds": [
+        {
+            "name": "Electron: All",
+            "configurations": [
+                "Electron: Main",
+                "Electron: Renderer"
+            ]
+        }
     ]
   }
