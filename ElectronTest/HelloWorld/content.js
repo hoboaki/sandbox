@@ -1,10 +1,11 @@
-const $ = require('jquery');
-const Grid = require('editable-grid');
-const remote = require('electron').remote;
-const Menu = remote.Menu;
-const MenuItem = remote.MenuItem;
-
 window.onload = function() {
+    // require
+    const $ = require('jquery');
+    const Grid = require('editable-grid');
+    const remote = require('electron').remote;
+    const Menu = remote.Menu;
+    const MenuItem = remote.MenuItem;
+
     // MenuBarテスト（TitleBarの上でのみ反応）
     {        
         let menu = new Menu();
