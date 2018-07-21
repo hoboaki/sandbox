@@ -14,7 +14,7 @@ window.onload = function() {
                 {name: 'json file', extensions: ['json']}
             ]
         });
-        if (filenames.length == 0) {
+        if (filenames == null) {
             return;
         }
 
