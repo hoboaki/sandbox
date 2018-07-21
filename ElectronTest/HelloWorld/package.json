@@ -9,6 +9,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "editable-grid": "^2.0.8",
     "electron": "^2.0.5",
     "globalshortcut": "^0.0.6"
   }
