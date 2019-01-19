@@ -5,7 +5,7 @@ RUN apk update && \
     apk add --no-cache nginx
 
 # ドキュメントルート
-ADD app /app
+ADD app-root /app-root
 ADD default.conf /etc/nginx/conf.d/default.conf
 
 # ポート設定
