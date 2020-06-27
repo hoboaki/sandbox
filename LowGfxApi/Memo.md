@@ -34,7 +34,7 @@
   - シェーダーリソースビュー（テクスチャビュー）
   - コンスタントバッファビュー 
   - サンプラー
-  - UAV（unordered access view）
+  - UAV（unordered access view） <- GL でいう SBO
 - 直接
   - レンダーターゲット設定（★）
   - ビューポートとシザー矩形
