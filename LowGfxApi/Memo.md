@@ -1,10 +1,10 @@
 # 3D  グラフィックス低レベルAPI に関するメモ
 
-## Vulkan 
+## コマンドバッファで設定する単位
+
+### Vulkan 
 
 ★マークがあるところは他の箇所と値を一致させる必要あり。
-
-### コマンドバッファで設定する単位
 
 - RenderPassBegin（レンダーターゲットクリアのトリガーも担う）
   - レンダーパス（★2）
@@ -55,23 +55,8 @@
   - 描画系
   - コンピュート
 
-## ネストコマンドバッファ
 
-- 普通の仕様。 
-- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCmdExecuteCommands.html
-
-## インダイレクト引数描画
-
-- [vkCmdDrawIndexedIndirect](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCmdDrawIndexedIndirect.html)
-
-## 非同期コンピュート
-
-- メイン Queue とは別の専用の Queue を用意することで実現。
-- [優先度設定](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-priority)もあり。メイン Queue より低い優先度で実行といったことも可能。0.0f〜1.0fで指定し値が大きい方が高優先。
-
-## DirectX 12
-
-### コマンドバッファ（コマンドリスト）で設定する単位
+### DirectX 12（コマンドリスト）
 
 ★マークがあるところは他の箇所と値を一致させる必要あり。
 
@@ -113,25 +98,7 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 
 ルートシグネチャへのポインタがありますけどシリアライズとは・・・？
 
-
-## ネストコマンドバッファ
-
-- 一部制約があるがだいたい普通。
-- [ID3D12GraphicsCommandList::ExecuteBundle](https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-executebundle)
-
-## インダイレクト引数描画
-
-- [ID3D12GraphicsCommandList::ExecuteIndirect](https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-executeindirect)
-
-
-## 非同期コンピュート
-
-- Vulkan と同様。
-- 優先度は NORMAL と HIGH に２種類のみ。
-
-## Metal
-
-### コマンドバッファ（コマンドエンコーダ）で設定する単位
+### Metal（コマンドエンコーダ）
 
 - レンダーパス（これを引数にコマンドエンコーダを作成・レンダーターゲットクリアのトリガーも担う）
   - レンダーターゲット
@@ -168,6 +135,19 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 
 ## ネストコマンドバッファ
 
+### Vulkan
+
+- 普通の仕様。 
+- https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCmdExecuteCommands.html
+
+### DirectX 12
+
+- 一部制約があるがだいたい普通。
+- [ID3D12GraphicsCommandList::ExecuteBundle](https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-executebundle)
+
+
+### Metal
+
 - 通常のコマンドバッファと区別化されている。IndirectCommandBuffer。
 - IndirectCommandBuffer 内から IndirectCommandBuffer はコールできない。
 - RenderCommandEncoder/ComputeCommandEncoder に生成済の IndirectCommandBuffer を挿入できる。
@@ -175,15 +155,32 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 
 ## インダイレクト引数描画
 
+### Vulkan
+
+- [vkCmdDrawIndexedIndirect](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCmdDrawIndexedIndirect.html)
+
+### DirectX 12
+
+- [ID3D12GraphicsCommandList::ExecuteIndirect](https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-executeindirect)
+
+### Metal
+
 - https://developer.apple.com/documentation/metal/mtlrendercommandencoder/specifying_drawing_and_dispatch_arguments_indirectly
 
-## 非同期コンピュート
+## 非同期コンピュート＆同期
 
-## 要調査
+### Vulkan
 
-- 共通
-  - 非同期コンピュート
-  - 複数Queue
+- メイン Queue とは別の専用の Queue を用意することで実現。
+- [優先度設定](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-priority)もあり。メイン Queue より低い優先度で実行といったことも可能。0.0f〜1.0fで指定し値が大きい方が高優先。
+
+### DirectX 12
+
+- Vulkan と同様。
+- [優先度](https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_command_queue_priority)は NORMAL、HIGH、GLOBAL_REALTIM の３種類。
+
+### Metal
+
 
 ## 参考
 
