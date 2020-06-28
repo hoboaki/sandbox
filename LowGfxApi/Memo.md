@@ -173,13 +173,34 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 
 - メイン Queue とは別の専用の Queue を用意することで実現。
 - [優先度設定](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-priority)もあり。メイン Queue より低い優先度で実行といったことも可能。0.0f〜1.0fで指定し値が大きい方が高優先。
+- Queue 間の同期
+  - セマフォ：Queue Family の制限は受けない。コマンドバッファの途中に挟めない。
+  - イベント：同じ Queue Family で使用可能。コマンドバッファの途中に挟める。
+- コマンドバッファ内の同期
+  - バリア：基本はいつものだけど設定項目が多いので要追加理解。
 
 ### DirectX 12
 
-- Vulkan と同様。
+- Vulkan と同様にQueueを２つ作る方式。
 - [優先度](https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_command_queue_priority)は NORMAL、HIGH、GLOBAL_REALTIM の３種類。
+- Queue 間の同期はフェンス。
+  - フェンス：コマンドバッファの途中に挟めない。
+- コマンドバッファ内の同期はバリア。
+  - [参考](https://docs.microsoft.com/ja-jp/windows/win32/direct3d12/using-resource-barriers-to-synchronize-resource-states-in-direct3d-12#split-barriers)
+  - TransitionBarrier：レンダーターゲットが読み取りテクスチャになるよといった状態遷移を扱うバリア。
+  - AliasingBarrier：AというResourceオブジェクトがこれ以降でBというResouceオブジェクトとして使われることを宣言するバリア。
+  - UavBarrier：ストレージバッファの読み書き処理をここまでに終わらせてというバリア。Dispatch した結果を別の Dispatch で参照する場合に使う。
+  - 各種バリアに分割バリアという指定方式もある。ここからこの区間で完了させておいてねーという宣言ができ、パイプラインの最適化のヒントとなる。
 
 ### Metal
+
+- [Queue を２つ作成](https://developer.apple.com/documentation/metal/synchronization/synchronizing_events_within_a_single_device)するのは一緒。
+- 優先度設定は見つからなかった。
+- Queue 間の同期はイベント。
+  - [イベント](https://developer.apple.com/documentation/metal/mtlevent)：コマンドバッファ（コマンドエンコーダ）の途中に挟めない。
+- コマンドバッファ内・コマンドバッファ間の同期はフェンス・バリア。
+  - [フェンス](https://developer.apple.com/documentation/metal/mtlfence)：DX12 でいう AliasingBarrier と同じ。MTLHeap（メモリプール）を使って手動でリソースメモリ管理をして同じアドレスに別リソースオブジェクトを割り当てているときに使う。
+  - バリア：ここまでに特定のリソースに対しての処理や特定のパイプラインステージに対する処理を終わらせてという宣言。
 
 
 ## 参考
