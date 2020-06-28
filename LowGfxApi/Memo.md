@@ -176,8 +176,10 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 - Queue 間の同期
   - セマフォ：Queue Family の制限は受けない。コマンドバッファの途中に挟めない。
   - イベント：同じ Queue Family で使用可能。コマンドバッファの途中に挟める。
-- コマンドバッファ内の同期
-  - バリア：基本はいつものだけど設定項目が多いので要追加理解。
+- コマンドバッファ内の同期：パイプラインバリア
+  - A の処理を B までに終わらせておいてね、的な感じで書ける。（[解説サイト1](https://gpuopen.com/learn/vulkan-barriers-explained/)　[解説サイト2](https://glhub.blogspot.com/2017/11/vulkan-vkcmdpipelinebarriervkpipelinest.html)）
+  - 更に引数プロパティの MemoryBarrier、BufferMemoryBarrier, ImageMemoryBarrier で対象となるリソースや遷移（DX12のTransitionBarrier/AliasBarrierに相当）を指定してバリアをはれる。
+  - サンプルが少なくて理解が難しい。
 
 ### DirectX 12
 
