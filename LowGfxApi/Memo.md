@@ -1,10 +1,10 @@
-# 3D  グラフィックス低レベルAPI に関するメモ
+# 3D グラフィックス低レベル API に関するメモ
 
 ## コマンドバッファで設定する単位
 
-### Vulkan 
+### Vulkan
 
-★マークがあるところは他の箇所と値を一致させる必要あり。
+★ マークがあるところは他の箇所と値を一致させる必要あり。
 
 - RenderPassBegin（レンダーターゲットクリアのトリガーも担う）
   - レンダーパス（★2）
@@ -14,7 +14,7 @@
   - レンダーエリア
     - https://qiita.com/Pctg-x8/items/2b3d5c8a861f42aa533f
   - レンダーターゲットクリアカラー
-- パイプライン（※マークがあるものは直接設定のAPIもある）
+- パイプライン（※マークがあるものは直接設定の API もある）
   - レンダーパス（★2）
   - シェーダー
   - 頂点バッファレイアウト
@@ -25,7 +25,7 @@
     - FillMode
     - CullMode
     - FrontFace
-    - DepthBias系
+    - DepthBias 系
   - マルチサンプリングオプション
   - デプスステンシルステート
   - ブレントステート
@@ -45,7 +45,7 @@
 - その他の直接設定
   - ビューポート（VK_DYNAMIC_STATE_VIEWPORT が有効なパイプラインの場合）
   - シザー矩形（VK_DYNAMIC_STATE_SCISSOR が有効なパイプラインの場合）
-  - ステンシルテスト参照値  
+  - ステンシルテスト参照値
   - ブレンド係数カラー値
   - プリミティブトポロジ（VK_DYNAMIC_STATE_PRIMITIVE_TOPOLOGY_EXT が有効なパイプラインの場合）
   - 頂点バッファ・インデックスバッファ
@@ -55,10 +55,9 @@
   - 描画系
   - コンピュート
 
-
 ### DirectX 12（コマンドリスト）
 
-★マークがあるところは他の箇所と値を一致させる必要あり。
+★ マークがあるところは他の箇所と値を一致させる必要あり。
 
 - パイプラインステート
   - ルートシグネチャのポインタ（★1）
@@ -66,7 +65,7 @@
     - FillMode
     - CullMode
     - FrontFace
-    - DepthBias系
+    - DepthBias 系
   - マルチサンプリングオプション
   - デプスステンシルステート
   - ブレンドステート
@@ -76,7 +75,7 @@
   - プリミティブトポロジタイプ（点, 線, 三角形）（★3）
   - レンダーターゲットのフォーマット（★2）
 - ルートシグネチャ（=シェーダーバインド宣言＆実体）（★1）
-  - コンスタントバッファビュー 
+  - コンスタントバッファビュー
   - テクスチャビュー（シェーダーリソースビュー）
   - サンプラー
   - ストレージバッファビュー（UAV:unordered access view）
@@ -120,7 +119,7 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
     - FillMode
     - CullMode
     - FrontFace
-    - DepthBias系
+    - DepthBias 系
   - デプスステンシルステート
   - ブレントステート
   - アーギュメントバッファで指定できる各パラメータ
@@ -137,7 +136,7 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 
 ### Vulkan
 
-- 普通の仕様。 
+- 普通の仕様。
 - https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/vkCmdExecuteCommands.html
 
 ### DirectX 12
@@ -145,13 +144,12 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 - 一部制約があるがだいたい普通。
 - [ID3D12GraphicsCommandList::ExecuteBundle](https://docs.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-executebundle)
 
-
 ### Metal
 
 - 通常のコマンドバッファと区別化されている。IndirectCommandBuffer。
 - IndirectCommandBuffer 内から IndirectCommandBuffer はコールできない。
 - RenderCommandEncoder/ComputeCommandEncoder に生成済の IndirectCommandBuffer を挿入できる。
-- IndirectCommandBuffer で扱える設定項目も限定的。デプスステンシルステートやブレンドステートなどは扱えない。他2種APIと比べると扱いづらそう。
+- IndirectCommandBuffer で扱える設定項目も限定的。デプスステンシルステートやブレンドステートなどは扱えない。他 2 種 API と比べると扱いづらそう。
 
 ## インダイレクト引数描画
 
@@ -172,25 +170,25 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 ### Vulkan
 
 - メイン Queue とは別の専用の Queue を用意することで実現。
-- [優先度設定](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-priority)もあり。メイン Queue より低い優先度で実行といったことも可能。0.0f〜1.0fで指定し値が大きい方が高優先。
+- [優先度設定](https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-priority)もあり。メイン Queue より低い優先度で実行といったことも可能。0.0f〜1.0f で指定し値が大きい方が高優先。
 - Queue 間の同期
   - セマフォ：Queue Family の制限は受けない。コマンドバッファの途中に挟めない。
   - イベント：同じ Queue Family で使用可能。コマンドバッファの途中に挟める。
 - コマンドバッファ内の同期：パイプラインバリア
-  - A の処理を B までに終わらせておいてね、的な感じで書ける。（[解説サイト1](https://gpuopen.com/learn/vulkan-barriers-explained/)　[解説サイト2](https://glhub.blogspot.com/2017/11/vulkan-vkcmdpipelinebarriervkpipelinest.html)）
-  - 更に引数プロパティの MemoryBarrier、BufferMemoryBarrier, ImageMemoryBarrier で対象となるリソースや遷移（DX12のTransitionBarrier/AliasBarrierに相当）を指定してバリアをはれる。
+  - A の処理を B までに終わらせておいてね、的な感じで書ける。（[解説サイト 1](https://gpuopen.com/learn/vulkan-barriers-explained/)　[解説サイト 2](https://glhub.blogspot.com/2017/11/vulkan-vkcmdpipelinebarriervkpipelinest.html)）
+  - 更に引数プロパティの MemoryBarrier、BufferMemoryBarrier, ImageMemoryBarrier で対象となるリソースや遷移（DX12 の TransitionBarrier/AliasBarrier に相当）を指定してバリアをはれる。
   - サンプルが少なくて理解が難しい。
 
 ### DirectX 12
 
-- Vulkan と同様にQueueを２つ作る方式。
+- Vulkan と同様に Queue を２つ作る方式。
 - [優先度](https://docs.microsoft.com/en-us/windows/win32/api/d3d12/ne-d3d12-d3d12_command_queue_priority)は NORMAL、HIGH、GLOBAL_REALTIM の３種類。
 - Queue 間の同期はフェンス。
   - フェンス：コマンドバッファの途中に挟めない。
 - コマンドバッファ内の同期はバリア。
   - [参考](https://docs.microsoft.com/ja-jp/windows/win32/direct3d12/using-resource-barriers-to-synchronize-resource-states-in-direct3d-12#split-barriers)
   - TransitionBarrier：レンダーターゲットが読み取りテクスチャになるよといった状態遷移を扱うバリア。
-  - AliasingBarrier：AというResourceオブジェクトがこれ以降でBというResouceオブジェクトとして使われることを宣言するバリア。
+  - AliasingBarrier：A という Resource オブジェクトがこれ以降で B という Resouce オブジェクトとして使われることを宣言するバリア。
   - UavBarrier：ストレージバッファの読み書き処理をここまでに終わらせてというバリア。Dispatch した結果を別の Dispatch で参照する場合に使う。
   - 各種バリアに分割バリアという指定方式もある。ここからこの区間で完了させておいてねーという宣言ができ、パイプラインの最適化のヒントとなる。
 
@@ -204,8 +202,6 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
   - [フェンス](https://developer.apple.com/documentation/metal/mtlfence)：DX12 でいう AliasingBarrier と同じ。MTLHeap（メモリプール）を使って手動でリソースメモリ管理をして同じアドレスに別リソースオブジェクトを割り当てているときに使う。
   - バリア：ここまでに特定のリソースに対しての処理や特定のパイプラインステージに対する処理を終わらせてという宣言。
 
-
 ## 参考
 
 - [A Comparison of Modern Graphics APIs](https://alain.xyz/blog/comparison-of-modern-graphics-apis)
-
