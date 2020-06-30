@@ -1,6 +1,10 @@
 # 3D グラフィックス低レベル API に関するメモ
 
+この資料はクロスプラットフォームな 3D グラフィックスライブラリを検討する個人的な資料です。各グラフィックスライブラリの差異をまとめたり，クロスプラットフォームなライブラリの設計や最適化に関するメモを書き残します。
+
 ## コマンドバッファで設定する単位
+
+### 個別メモ
 
 ### Vulkan
 
@@ -132,7 +136,12 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
   - 描画系（プリミティブトポロジは引数で指定）
   - コンピュート
 
-## ネストコマンドバッファ
+## セカンダリコマンドバッファ
+
+### 個別メモ
+
+- 基本的に各ライブラリは何かしらの形式でセカンダリまではサポートしている。
+- 今まで１つの大きなプライマリにたくさんのセカンダリを挿入する設計しか考えてこなかったが，オーバーヘッドがそこまで大きくないのならプライマリももっと細かくすれば更に最適化できそうな気がしてきた。
 
 ### Vulkan
 
@@ -150,8 +159,13 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 - IndirectCommandBuffer 内から IndirectCommandBuffer はコールできない。
 - RenderCommandEncoder/ComputeCommandEncoder に生成済の IndirectCommandBuffer を挿入できる。
 - IndirectCommandBuffer で扱える設定項目も限定的。デプスステンシルステートやブレンドステートなどは扱えない。他 2 種 API と比べると扱いづらそう。
+- ちなみに MoltenVk では Queue::submit() のタイミングでそれまでにコマンドバッファにつまれていた内容を Metal コマンドバッファとして再生成しているためこの制約にとらわれない。オーバーヘッドはあるが API としては互換がとれている。賢い。
 
 ## インダイレクト引数描画
+
+### 個別メモ
+
+- 全て同じように機能はそろっている。
 
 ### Vulkan
 
@@ -166,6 +180,10 @@ https://shobomaru.wordpress.com/2015/07/22/d3d12-pipeline-state/
 - https://developer.apple.com/documentation/metal/mtlrendercommandencoder/specifying_drawing_and_dispatch_arguments_indirectly
 
 ## 非同期コンピュート＆同期
+
+### 個別メモ
+
+- 同期は仕様をちゃんと考える必要あり。まずここの見通しをたてた上で他のところやったほうが良さそう。
 
 ### Vulkan
 
