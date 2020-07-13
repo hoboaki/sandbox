@@ -18,6 +18,9 @@ MaxEmptyLinesToKeep: 1
 # インライン関数のみ1行での記述を許可
 AllowShortFunctionsOnASingleLine: Inline
 
+# 継承
+BreakInheritanceList: BeforeComma
+
 # コンストラクタ
 AllowAllConstructorInitializersOnNextLine: true
 BreakConstructorInitializersBeforeComma: true
