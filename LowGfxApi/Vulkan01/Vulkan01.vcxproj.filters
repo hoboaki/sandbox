@@ -33,9 +33,6 @@
     <ClInclude Include="ae\gfx_low\SystemCreateInfo.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ae\gfx_low\SdkInclude.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="ae\base\Pointer.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -127,6 +124,18 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ae\base\SdkHeader.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\SystemDebugLevel.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ae\base\Noncopyable.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\SdkHeader.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ae\base\ArrayLength.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

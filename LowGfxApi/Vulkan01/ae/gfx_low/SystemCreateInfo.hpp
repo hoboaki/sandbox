@@ -1,6 +1,8 @@
 // 文字コード：UTF-8
 #pragma once
 
+#include <ae/gfx_low/SystemDebugLevel.hpp>
+
 //------------------------------------------------------------------------------
 namespace ae {
 namespace gfx_low {
@@ -12,6 +14,15 @@ public:
     //@{
     SystemCreateInfo();
     //@}
+
+    /// @name システムデバッグレベル（初期値：NoDebug）
+    //@{
+    SystemDebugLevel DebugLevel() const { return debugLevel_; }
+    void SetDebugLevel(SystemDebugLevel level);
+    //@}
+
+private:
+    SystemDebugLevel debugLevel_ = SystemDebugLevel::NoDebug;
 };
 
 }  // namespace gfx_low

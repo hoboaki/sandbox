@@ -88,6 +88,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ae\base\ArrayLength.hpp" />
     <ClInclude Include="ae\base\Bool.hpp" />
     <ClInclude Include="ae\base\BuiltInTypes.hpp" />
     <ClInclude Include="ae\base\Calendar.hpp" />
@@ -99,6 +100,7 @@
     <ClInclude Include="ae\base\IConsoleCallback.hpp" />
     <ClInclude Include="ae\base\IRuntimeErrorCallback.hpp" />
     <ClInclude Include="ae\base\NewLine.hpp" />
+    <ClInclude Include="ae\base\Noncopyable.hpp" />
     <ClInclude Include="ae\base\Os.hpp" />
     <ClInclude Include="ae\base\OsType.hpp" />
     <ClInclude Include="ae\base\PodInheritClass.hpp" />
@@ -119,12 +121,16 @@
     <ClInclude Include="ae\base\TypeTraits.hpp" />
     <ClInclude Include="ae\base\Unused.hpp" />
     <ClInclude Include="ae\base\ValueInRange.hpp" />
-    <ClInclude Include="ae\gfx_low\SdkInclude.hpp">
+    <ClInclude Include="ae\gfx_low\SdkHeader.hpp">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="ae\gfx_low\System.hpp" />
     <ClInclude Include="ae\gfx_low\SystemCreateInfo.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\SystemDebugLevel.hpp">
       <SubType>
       </SubType>
     </ClInclude>

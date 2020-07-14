@@ -17,8 +17,6 @@
  *
  * Author: Jeremy Hayes <jeremy@lunarg.com>
  */
-#if 0 // comment out
-
 #if defined(VK_USE_PLATFORM_XLIB_KHR) || defined(VK_USE_PLATFORM_XCB_KHR)
 #include <X11/Xutil.h>
 #elif defined(VK_USE_PLATFORM_WAYLAND_KHR)
@@ -3324,6 +3322,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return (DefWindowProc(hWnd, uMsg, wParam, lParam));
 }
 
+#if 0  // comment out
 int WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,
                    LPSTR pCmdLine,
@@ -3452,6 +3451,8 @@ int main(int argc, char** argv) {
 
     return validation_error;
 }
+#endif  // end comment out
+
 
 #elif defined(VK_USE_PLATFORM_METAL_EXT)
 
@@ -3470,4 +3471,3 @@ static void demo_main(struct Demo& demo,
 #else
 #error "Platform not supported"
 #endif
-#endif // end comment out
