@@ -21,6 +21,9 @@ AllowShortFunctionsOnASingleLine: Inline
 # 継承
 BreakInheritanceList: BeforeComma
 
+# 関数引数の改行後インデント
+AlignAfterOpenBracket: DontAlign
+
 # コンストラクタ
 AllowAllConstructorInitializersOnNextLine: true
 BreakConstructorInitializersBeforeComma: true
