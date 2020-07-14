@@ -18,7 +18,7 @@ public:
     /// @name システムデバッグレベル（初期値：NoDebug）
     //@{
     SystemDebugLevel DebugLevel() const { return debugLevel_; }
-    void SetDebugLevel(SystemDebugLevel level);
+    SystemCreateInfo& SetDebugLevel(SystemDebugLevel level);
     //@}
 
 private:
