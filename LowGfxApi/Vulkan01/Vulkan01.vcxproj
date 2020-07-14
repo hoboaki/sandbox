@@ -57,9 +57,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VK_USE_PLATFORM_WIN32_KHR;VK_PROTOTYPES;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VK_USE_PLATFORM_WIN32_KHR;VK_PROTOTYPES;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;_WINDOWS;_DEBUG;AE_LIBRARY_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%VULKAN_SDK%\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%VULKAN_SDK%\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -73,9 +74,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>VK_USE_PLATFORM_WIN32_KHR;VK_PROTOTYPES;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VK_USE_PLATFORM_WIN32_KHR;VK_PROTOTYPES;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;WIN32;NDEBUG;_WINDOWS;AE_LIBRARY_PREVIEW;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%VULKAN_SDK%\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%VULKAN_SDK%\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -86,14 +88,68 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ae\gfx_low\Instance.hpp" />
+    <ClInclude Include="ae\base\Bool.hpp" />
+    <ClInclude Include="ae\base\BuiltInTypes.hpp" />
+    <ClInclude Include="ae\base\Calendar.hpp" />
+    <ClInclude Include="ae\base\Compiler.hpp" />
+    <ClInclude Include="ae\base\Config.hpp" />
+    <ClInclude Include="ae\base\Console.hpp" />
+    <ClInclude Include="ae\base\FixedString.hpp" />
+    <ClInclude Include="ae\base\FunctionAttribute.hpp" />
+    <ClInclude Include="ae\base\IConsoleCallback.hpp" />
+    <ClInclude Include="ae\base\IRuntimeErrorCallback.hpp" />
+    <ClInclude Include="ae\base\NewLine.hpp" />
+    <ClInclude Include="ae\base\Os.hpp" />
+    <ClInclude Include="ae\base\OsType.hpp" />
+    <ClInclude Include="ae\base\PodInheritClass.hpp" />
+    <ClInclude Include="ae\base\PodStruct.hpp" />
+    <ClInclude Include="ae\base\PodTypes.hpp" />
+    <ClInclude Include="ae\base\Pointer.hpp" />
+    <ClInclude Include="ae\base\PointerCheck.hpp" />
+    <ClInclude Include="ae\base\RuntimeAssert.hpp" />
+    <ClInclude Include="ae\base\RuntimeError.hpp" />
+    <ClInclude Include="ae\base\SdkHeader.hpp" />
+    <ClInclude Include="ae\base\ShortString.hpp" />
+    <ClInclude Include="ae\base\ShortStringFactory.hpp" />
+    <ClInclude Include="ae\base\StaticAssert.hpp" />
+    <ClInclude Include="ae\base\StringTraits.hpp" />
+    <ClInclude Include="ae\base\Time.hpp" />
+    <ClInclude Include="ae\base\TimeSpan.hpp" />
+    <ClInclude Include="ae\base\ToShortString.hpp" />
+    <ClInclude Include="ae\base\TypeTraits.hpp" />
+    <ClInclude Include="ae\base\Unused.hpp" />
+    <ClInclude Include="ae\base\ValueInRange.hpp" />
+    <ClInclude Include="ae\gfx_low\SdkInclude.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\System.hpp" />
+    <ClInclude Include="ae\gfx_low\SystemCreateInfo.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Vulkan01.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="ae\base\Calendar.cpp" />
+    <ClCompile Include="ae\base\Console.cpp" />
+    <ClCompile Include="ae\base\IConsoleCallback.cpp" />
+    <ClCompile Include="ae\base\IRuntimeErrorCallback.cpp" />
+    <ClCompile Include="ae\base\PointerCheck.cpp" />
+    <ClCompile Include="ae\base\RuntimeAssert.cpp" />
+    <ClCompile Include="ae\base\RuntimeError.cpp" />
+    <ClCompile Include="ae\base\ShortStringFactory.cpp" />
+    <ClCompile Include="ae\base\StringTraits.cpp" />
+    <ClCompile Include="ae\base\Time.cpp" />
+    <ClCompile Include="ae\base\TimeSpan.cpp" />
+    <ClCompile Include="ae\gfx_low\System.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="SampleMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Vulkan01.rc" />

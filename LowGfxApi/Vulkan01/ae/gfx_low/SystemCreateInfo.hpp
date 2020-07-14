@@ -5,8 +5,14 @@
 namespace ae {
 namespace gfx_low {
 
-/// グラフィックスライブラリインスタンス。
-class Instance {};
+/// System オブジェクト作成に必要な情報。
+class SystemCreateInfo {
+public:
+    /// @name コンストラクタ
+    //@{
+    SystemCreateInfo() {}
+    //@}
+};
 
 }  // namespace gfx_low
 }  // namespace ae
