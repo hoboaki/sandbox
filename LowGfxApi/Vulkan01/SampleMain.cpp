@@ -17,6 +17,7 @@
  *
  * Author: Jeremy Hayes <jeremy@lunarg.com>
  */
+#if 0 // comment out
 
 #if defined(VK_USE_PLATFORM_XLIB_KHR) || defined(VK_USE_PLATFORM_XCB_KHR)
 #include <X11/Xutil.h>
@@ -3469,3 +3470,4 @@ static void demo_main(struct Demo& demo,
 #else
 #error "Platform not supported"
 #endif
+#endif // end comment out
