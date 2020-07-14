@@ -5,7 +5,7 @@
 
 namespace ae {
 namespace gfx_low {
-struct SystemCreateInfo;
+class SystemCreateInfo;
 }}  // namespace ae
 
 //------------------------------------------------------------------------------

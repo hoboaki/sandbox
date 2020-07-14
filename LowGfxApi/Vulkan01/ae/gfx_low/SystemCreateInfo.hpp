@@ -10,7 +10,7 @@ class SystemCreateInfo {
 public:
     /// @name コンストラクタ
     //@{
-    SystemCreateInfo() {}
+    SystemCreateInfo();
     //@}
 };
 

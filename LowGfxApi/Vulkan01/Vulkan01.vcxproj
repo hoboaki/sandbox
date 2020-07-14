@@ -149,6 +149,10 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="ae\gfx_low\SystemCreateInfo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="SampleMain.cpp" />
   </ItemGroup>
