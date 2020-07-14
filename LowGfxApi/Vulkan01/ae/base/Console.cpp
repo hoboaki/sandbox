@@ -5,7 +5,9 @@
 #include <ae/base/FunctionAttribute.hpp>
 #include <ae/base/IConsoleCallback.hpp>
 #include <ae/base/NewLine.hpp>
+#include <ae/base/Os.hpp>
 #include <ae/base/PointerCheck.hpp>
+#include <ae/base/SdkHeader.hpp>
 #include <ae/base/Time.hpp>
 
 //------------------------------------------------------------------------------
@@ -65,7 +67,14 @@ IConsoleCallback& Console::DefaultCallback()
     public:
         AE_BASE_OVERRIDE(void onWrite(const char* aFormat, va_list aArg))
         {
+#if defined(AE_BASE_OS_WINDOWS)
+            char buff[256];
+            std::vsnprintf(buff, sizeof(buff), aFormat, aArg);
+            buff[sizeof(buff) - 1] = '\0';
+            OutputDebugStringA(buff);
+#else
             ::std::vprintf(aFormat, aArg);
+#endif
         }
     };
     static Callback obj;
