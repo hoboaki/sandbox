@@ -3322,8 +3322,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     return (DefWindowProc(hWnd, uMsg, wParam, lParam));
 }
 
-#if 0  // comment out
-int WINAPI WinMain(HINSTANCE hInstance,
+int WINAPI DemoWinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,
                    LPSTR pCmdLine,
                    int nCmdShow) {
@@ -3451,7 +3450,6 @@ int main(int argc, char** argv) {
 
     return validation_error;
 }
-#endif  // end comment out
 
 
 #elif defined(VK_USE_PLATFORM_METAL_EXT)
