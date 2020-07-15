@@ -11,7 +11,7 @@ extern int WINAPI DemoWinMain(
 //------------------------------------------------------------------------------
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     int nCmdShow) {
-#if 1
+#if 0
     return DemoWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 #else
     // グラフィックスシステムインスタンス作成
