@@ -1,7 +1,4 @@
 // 文字コード：UTF-8
-#include <fcntl.h>
-#include <io.h>
-
 #include <ae/base/Console.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/base/SdkHeader.hpp>

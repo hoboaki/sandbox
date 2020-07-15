@@ -89,6 +89,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ae\base\ArrayLength.hpp" />
+    <ClInclude Include="ae\base\BitSet.hpp" />
     <ClInclude Include="ae\base\Bool.hpp" />
     <ClInclude Include="ae\base\BuiltInTypes.hpp" />
     <ClInclude Include="ae\base\Calendar.hpp" />
@@ -121,6 +122,14 @@
     <ClInclude Include="ae\base\TypeTraits.hpp" />
     <ClInclude Include="ae\base\Unused.hpp" />
     <ClInclude Include="ae\base\ValueInRange.hpp" />
+    <ClInclude Include="ae\gfx_low\PhysicalDeviceInfo.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\QueueType.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="ae\gfx_low\SdkHeader.hpp">
       <SubType>
       </SubType>

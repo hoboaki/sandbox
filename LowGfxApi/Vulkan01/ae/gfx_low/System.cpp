@@ -1,7 +1,9 @@
 // 文字コード：UTF-8
+#include <ae/gfx_low/System.hpp>
+
 #include <ae/base/ArrayLength.hpp>
 #include <ae/base/RuntimeAssert.hpp>
-#include <ae/gfx_low/System.hpp>
+#include <ae/gfx_low/PhysicalDeviceInfo.hpp>
 #include <ae/gfx_low/SystemCreateInfo.hpp>
 
 //------------------------------------------------------------------------------
@@ -113,7 +115,7 @@ System::System(const SystemCreateInfo& createInfo) {
                     VK_EXT_METAL_SURFACE_EXTENSION_NAME;
             }
 #endif
-            assert(enabledExtensionCount_ < 64);
+            AE_BASE_ASSERT_LESS(enabledExtensionCount_, ExtensionCountMax);
         }
     }
 
@@ -185,6 +187,19 @@ System::System(const SystemCreateInfo& createInfo) {
                 "information.\n");
         }
     }
+
+    // GPU列挙
+    {
+        uint32_t physicalDeviceCount;
+        result = instance_.enumeratePhysicalDevices(
+            &physicalDeviceCount, static_cast<vk::PhysicalDevice*>(nullptr));
+        AE_BASE_ASSERT(result == vk::Result::eSuccess);
+        AE_BASE_ASSERT_MIN_TERM(
+            1, int(physicalDeviceCount), PhysicalDeviceCountMax);
+        result = instance_.enumeratePhysicalDevices(
+            &physicalDeviceCount, physicalDevices_);
+        AE_BASE_ASSERT(result == vk::Result::eSuccess);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -196,6 +211,32 @@ System::~System() {
     // 複数作成防止
     AE_BASE_ASSERT(IsInstanceCreated);
     IsInstanceCreated = false;
+}
+
+//------------------------------------------------------------------------------
+PhysicalDeviceInfo System::PhysicalDeviceInfo(
+    const int physicalDeviceIndex) const {
+    AE_BASE_ASSERT_LESS(physicalDeviceIndex, physicalDeviceCount_);
+    gfx_low::PhysicalDeviceInfo info;
+
+    const auto device = physicalDevices_[physicalDeviceIndex];
+
+    // Queue 特性
+    {
+        const uint32_t queueFamilyCountMax = 8;
+        VkQueueFamilyProperties queueFamilyProperties[queueFamilyCountMax] = {};
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(
+            device,
+            &queueFamilyCount,
+            queueFamilyProperties);
+        AE_BASE_ASSERT_LESS(queueFamilyCount, queueFamilyCountMax);
+
+        for (uint32_t i = 0; i < queueFamilyCount; ++i) {
+        }
+    }
+
+    return info;
 }
 
 //------------------------------------------------------------------------------

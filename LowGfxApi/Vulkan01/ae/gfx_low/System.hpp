@@ -7,6 +7,7 @@
 
 namespace ae {
 namespace gfx_low {
+class PhysicalDeviceInfo;
 class SystemCreateInfo;
 }}  // namespace ae
 
@@ -26,14 +27,26 @@ public:
     ~System();
 	//@}
 
+    /// @name 情報取得
+    //@{
+    int PhysicalDeviceCount() const { return physicalDeviceCount_; }
+    PhysicalDeviceInfo PhysicalDeviceInfo(int physicalDeviceIndex) const;
+    //@}
+
 private:
+    static const int PhysicalDeviceCountMax = 16;
+    static const int ExtensionCountMax = 64;
+    static const int LayerCountMax = 64;
+
     static bool IsInstanceCreated;
 
     ::vk::Instance instance_;
-    uint32_t enabledExtensionCount_ = 0;
-    uint32_t enabledLayerCount_ = 0;
-    char const* extensionNames_[64] = {};
-    char const* enabledLayers_[64] = {};
+    int enabledExtensionCount_ = 0;
+    int enabledLayerCount_ = 0;
+    int physicalDeviceCount_ = 0;
+    char const* extensionNames_[ExtensionCountMax] = {};
+    char const* enabledLayers_[LayerCountMax] = {};
+    ::vk::PhysicalDevice physicalDevices_[PhysicalDeviceCountMax] = {};
 };
 
 }  // namespace gfx_low
