@@ -111,6 +111,9 @@
     <ClInclude Include="ae\base\PointerCheck.hpp" />
     <ClInclude Include="ae\base\RuntimeAssert.hpp" />
     <ClInclude Include="ae\base\RuntimeError.hpp" />
+    <ClInclude Include="ae\base\ScalerClass.hpp" />
+    <ClInclude Include="ae\base\ScalerStruct.hpp" />
+    <ClInclude Include="ae\base\ScalerTypes.hpp" />
     <ClInclude Include="ae\base\SdkHeader.hpp" />
     <ClInclude Include="ae\base\ShortString.hpp" />
     <ClInclude Include="ae\base\ShortStringFactory.hpp" />

@@ -29,8 +29,15 @@ public:
 
     /// @name 情報取得
     //@{
+    /// 認識している物理デバイス数。
     int PhysicalDeviceCount() const { return physicalDeviceCount_; }
+
+    /// 指定の物理デバイスの情報を取得。
+    /// @param physicalDeviceIndex [0, PhysicalDeviceCount())
     PhysicalDeviceInfo PhysicalDeviceInfo(int physicalDeviceIndex) const;
+
+    /// 全物理デバイスの情報をコンソールにダンプする。
+    void DumpAllPhysicalDeviceInfo() const;
     //@}
 
 private:

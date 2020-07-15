@@ -13,6 +13,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
         ::ae::gfx_low::SystemCreateInfo().SetDebugLevel(
             ::ae::gfx_low::SystemDebugLevel::Normal));
 
+    // Queue 構成選択
+    gfxLowSystem.DumpAllPhysicalDeviceInfo();
+
     return 0;
 }
 // EOF

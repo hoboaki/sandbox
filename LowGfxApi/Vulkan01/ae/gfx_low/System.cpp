@@ -1,9 +1,8 @@
 // 文字コード：UTF-8
-#include <ae/gfx_low/System.hpp>
-
 #include <ae/base/ArrayLength.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
+#include <ae/gfx_low/System.hpp>
 #include <ae/gfx_low/SystemCreateInfo.hpp>
 
 //------------------------------------------------------------------------------
@@ -199,6 +198,7 @@ System::System(const SystemCreateInfo& createInfo) {
         result = instance_.enumeratePhysicalDevices(
             &physicalDeviceCount, physicalDevices_);
         AE_BASE_ASSERT(result == vk::Result::eSuccess);
+        physicalDeviceCount_ = int(physicalDeviceCount);
     }
 }
 
@@ -217,26 +217,72 @@ System::~System() {
 PhysicalDeviceInfo System::PhysicalDeviceInfo(
     const int physicalDeviceIndex) const {
     AE_BASE_ASSERT_LESS(physicalDeviceIndex, physicalDeviceCount_);
-    gfx_low::PhysicalDeviceInfo info;
-
     const auto device = physicalDevices_[physicalDeviceIndex];
+
+    gfx_low::PhysicalDeviceInfo info;
 
     // Queue 特性
     {
         const uint32_t queueFamilyCountMax = 8;
-        VkQueueFamilyProperties queueFamilyProperties[queueFamilyCountMax] = {};
+        ::vk::QueueFamilyProperties queueFamilyProperties[queueFamilyCountMax] =
+            {};
         uint32_t queueFamilyCount = 0;
-        vkGetPhysicalDeviceQueueFamilyProperties(
-            device,
-            &queueFamilyCount,
-            queueFamilyProperties);
+        device.getQueueFamilyProperties(
+            &queueFamilyCount, static_cast<::vk::QueueFamilyProperties*>(nullptr));
         AE_BASE_ASSERT_LESS(queueFamilyCount, queueFamilyCountMax);
+        device.getQueueFamilyProperties(
+            &queueFamilyCount, queueFamilyProperties);
 
+        // 最初に見つかった物を採用する
         for (uint32_t i = 0; i < queueFamilyCount; ++i) {
+            // Normal
+            if (!info.isSupportedQueueType(QueueType::Normal) &&
+                queueFamilyProperties[i].queueFlags |
+                    ::vk::QueueFlagBits::eGraphics) {
+                info.internalSupportQueueTypes.set(
+                    int(QueueType::Normal), true);
+                info.internalQueueFamilyIndexForQueueTypeArray[int(
+                    QueueType::Normal)] = i;
+            }
+
+            // ComputeOnly
+            if (!info.isSupportedQueueType(QueueType::ComputeOnly) &&
+                queueFamilyProperties[i].queueFlags ==
+                    ::vk::QueueFlagBits::eCompute) {
+                info.internalSupportQueueTypes.set(
+                    int(QueueType::ComputeOnly), true);
+                info.internalQueueFamilyIndexForQueueTypeArray[int(
+                    QueueType::ComputeOnly)] = i;
+            }
+
+            // CopyOnly
+            if (!info.isSupportedQueueType(QueueType::CopyOnly) &&
+                queueFamilyProperties[i].queueFlags ==
+                    ::vk::QueueFlagBits::eTransfer) {
+                info.internalSupportQueueTypes.set(
+                    int(QueueType::CopyOnly), true);
+                info.internalQueueFamilyIndexForQueueTypeArray[int(
+                    QueueType::CopyOnly)] = i;
+            }
         }
     }
 
     return info;
+}
+
+//------------------------------------------------------------------------------
+void System::DumpAllPhysicalDeviceInfo() const {
+    AE_BASE_COUTFMT_LINE("PhysicalDeviceCount: %d", physicalDeviceCount_);
+    for (int i = 0; i < physicalDeviceCount_; ++i) {
+        const auto info = PhysicalDeviceInfo(i);
+        AE_BASE_COUTFMT_LINE("    PhysicalDevice #%d:", i);
+        AE_BASE_COUTFMT_LINE("        QueueTypeSupport[Normal]: %d",
+            info.isSupportedQueueType(QueueType::Normal));
+        AE_BASE_COUTFMT_LINE("        QueueTypeSupport[ComputeOnly]: %d",
+            info.isSupportedQueueType(QueueType::ComputeOnly));
+        AE_BASE_COUTFMT_LINE("        QueueTypeSupport[CopyOnly]: %d",
+            info.isSupportedQueueType(QueueType::CopyOnly));
+    }
 }
 
 //------------------------------------------------------------------------------
