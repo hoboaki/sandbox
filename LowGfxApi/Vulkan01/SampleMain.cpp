@@ -626,7 +626,7 @@ Demo::Demo()
       quit{false},
       curFrame{0},
       frameCount{0},
-      validate{false},
+      validate{true},
       use_break{false},
       suppress_popups{false},
       current_buffer{0},
