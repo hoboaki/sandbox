@@ -236,33 +236,26 @@ PhysicalDeviceInfo System::PhysicalDeviceInfo(
         // 最初に見つかった物を採用する
         for (uint32_t i = 0; i < queueFamilyCount; ++i) {
             // Normal
-            if (!info.isSupportedQueueType(QueueType::Normal) &&
-                queueFamilyProperties[i].queueFlags |
+            const auto& queueProps = queueFamilyProperties[i];
+            if (info.creatableQueueCount(QueueType::Normal) == 0 &&
+                queueProps.queueFlags |
                     ::vk::QueueFlagBits::eGraphics) {
-                info.internalSupportQueueTypes.set(
-                    int(QueueType::Normal), true);
-                info.internalQueueFamilyIndexForQueueTypeArray[int(
-                    QueueType::Normal)] = i;
+                info.internalCreatableQueueCounts[int(
+                    QueueType::Normal)] = int(queueProps.queueCount);
             }
 
             // ComputeOnly
-            if (!info.isSupportedQueueType(QueueType::ComputeOnly) &&
-                queueFamilyProperties[i].queueFlags ==
-                    ::vk::QueueFlagBits::eCompute) {
-                info.internalSupportQueueTypes.set(
-                    int(QueueType::ComputeOnly), true);
-                info.internalQueueFamilyIndexForQueueTypeArray[int(
-                    QueueType::ComputeOnly)] = i;
+            if (info.creatableQueueCount(QueueType::ComputeOnly) == 0 &&
+                queueProps.queueFlags == ::vk::QueueFlagBits::eCompute) {
+                info.internalCreatableQueueCounts[int(QueueType::ComputeOnly)] =
+                    int(queueProps.queueCount);
             }
 
             // CopyOnly
-            if (!info.isSupportedQueueType(QueueType::CopyOnly) &&
-                queueFamilyProperties[i].queueFlags ==
-                    ::vk::QueueFlagBits::eTransfer) {
-                info.internalSupportQueueTypes.set(
-                    int(QueueType::CopyOnly), true);
-                info.internalQueueFamilyIndexForQueueTypeArray[int(
-                    QueueType::CopyOnly)] = i;
+            if (info.creatableQueueCount(QueueType::CopyOnly) == 0 &&
+                queueProps.queueFlags == ::vk::QueueFlagBits::eTransfer) {
+                info.internalCreatableQueueCounts[int(QueueType::CopyOnly)] =
+                    int(queueProps.queueCount);
             }
         }
     }
@@ -276,12 +269,12 @@ void System::DumpAllPhysicalDeviceInfo() const {
     for (int i = 0; i < physicalDeviceCount_; ++i) {
         const auto info = PhysicalDeviceInfo(i);
         AE_BASE_COUTFMT_LINE("    PhysicalDevice #%d:", i);
-        AE_BASE_COUTFMT_LINE("        QueueTypeSupport[Normal]: %d",
-            info.isSupportedQueueType(QueueType::Normal));
-        AE_BASE_COUTFMT_LINE("        QueueTypeSupport[ComputeOnly]: %d",
-            info.isSupportedQueueType(QueueType::ComputeOnly));
-        AE_BASE_COUTFMT_LINE("        QueueTypeSupport[CopyOnly]: %d",
-            info.isSupportedQueueType(QueueType::CopyOnly));
+        AE_BASE_COUTFMT_LINE("        CreatableQueueCount[Normal]: %d",
+            info.creatableQueueCount(QueueType::Normal));
+        AE_BASE_COUTFMT_LINE("        CreatableQueueCount[ComputeOnly]: %d",
+            info.creatableQueueCount(QueueType::ComputeOnly));
+        AE_BASE_COUTFMT_LINE("        CreatableQueueCount[CopyOnly]: %d",
+            info.creatableQueueCount(QueueType::CopyOnly));
     }
 }
 

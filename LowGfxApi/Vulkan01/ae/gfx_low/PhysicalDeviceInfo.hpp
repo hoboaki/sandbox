@@ -12,16 +12,14 @@ namespace gfx_low {
 /// GPU デバイス情報。
 class PhysicalDeviceInfo {
 public:
-    /// 指定の QueueType をサポートしているか。
-    bool isSupportedQueueType(QueueType queueType) const {
-        return internalSupportQueueTypes.get(int(queueType));
+    /// 指定の QueueType の Queue の作成可能最大数。。
+    int creatableQueueCount(QueueType queueType) const {
+        return internalCreatableQueueCounts[int(queueType)];
     }
 
     // internal
-    ::ae::base::BitSet<static_cast<int>(QueueType::TERM)>
-        internalSupportQueueTypes;
-    ::std::array<uint32_t, static_cast<int>(QueueType::TERM)>
-        internalQueueFamilyIndexForQueueTypeArray;
+    ::std::array<int, static_cast<int>(QueueType::TERM)>
+        internalCreatableQueueCounts = {};
 };
 
 }  // namespace gfx_low
