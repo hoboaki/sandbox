@@ -19,13 +19,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     return DemoWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 #else
     // グラフィックスシステムインスタンス作成
-    ::std::unique_ptr< ::ae::gfx_low::System> gfxLowSystem(
+    ::std::unique_ptr<::ae::gfx_low::System> gfxLowSystem(
         new ::ae::gfx_low::System(
             ::ae::gfx_low::SystemCreateInfo().SetDebugLevel(
                 ::ae::gfx_low::SystemDebugLevel::Normal)));
 
     // Device & Queue 作成
-    ::std::unique_ptr< ::ae::gfx_low::Device> gfxLowDevice;
+    ::std::unique_ptr<::ae::gfx_low::Device> gfxLowDevice;
     {
         // デバッグダンプ
         gfxLowSystem->DumpAllPhysicalDeviceInfo();

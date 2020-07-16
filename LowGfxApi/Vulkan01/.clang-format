@@ -3,6 +3,9 @@
 # http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 BasedOnStyle: Google
 
+# C++バージョン設定
+Standard: c++11
+
 # アクセス修飾子はインデントしない
 AccessModifierOffset: -4
 
@@ -39,3 +42,6 @@ AllowShortCaseLabelsOnASingleLine: true
 # 改行許可
 AllowAllArgumentsOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
+
+# テンプレート引数の括弧内スペースは無し
+SpacesInAngles: false
