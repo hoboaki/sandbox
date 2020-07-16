@@ -2,8 +2,12 @@
 #include <ae/base/Console.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/base/SdkHeader.hpp>
+#include <ae/gfx_low/Device.hpp>
+#include <ae/gfx_low/DeviceCreateInfo.hpp>
+#include <ae/gfx_low/QueueCreateInfo.hpp>
 #include <ae/gfx_low/System.hpp>
 #include <ae/gfx_low/SystemCreateInfo.hpp>
+#include <memory>
 
 extern int WINAPI DemoWinMain(
     HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow);
@@ -15,12 +19,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     return DemoWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
 #else
     // グラフィックスシステムインスタンス作成
-    ::ae::gfx_low::System gfxLowSystem(
-        ::ae::gfx_low::SystemCreateInfo().SetDebugLevel(
-            ::ae::gfx_low::SystemDebugLevel::Normal));
+    ::std::unique_ptr< ::ae::gfx_low::System> gfxLowSystem(
+        new ::ae::gfx_low::System(
+            ::ae::gfx_low::SystemCreateInfo().SetDebugLevel(
+                ::ae::gfx_low::SystemDebugLevel::Normal)));
 
-    // Queue 構成選択
-    gfxLowSystem.DumpAllPhysicalDeviceInfo();
+    // Device & Queue 作成
+    ::std::unique_ptr< ::ae::gfx_low::Device> gfxLowDevice;
+    {
+        // デバッグダンプ
+        gfxLowSystem->DumpAllPhysicalDeviceInfo();
+
+        // Queue の作成情報を用意
+        const int queueCount = 1;
+        ::ae::gfx_low::QueueCreateInfo queueCreateInfos[queueCount];
+        queueCreateInfos[0] =
+            ::ae::gfx_low::QueueCreateInfo()
+                .SetType(::ae::gfx_low::QueueType::Normal)
+                .SetPriority(::ae::gfx_low::QueuePriority::Normal);
+
+        // Device の作成
+        gfxLowDevice.reset(new ::ae::gfx_low::Device(
+            ::ae::gfx_low::DeviceCreateInfo()
+                .SetSystem(gfxLowSystem.get())
+                .SetQueueCreateInfos(queueCount, queueCreateInfos)));
+    }
 
     return 0;
 #endif

@@ -125,14 +125,27 @@
     <ClInclude Include="ae\base\TypeTraits.hpp" />
     <ClInclude Include="ae\base\Unused.hpp" />
     <ClInclude Include="ae\base\ValueInRange.hpp" />
+    <ClInclude Include="ae\gfx_low\Device.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\DeviceCreateInfo.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="ae\gfx_low\PhysicalDeviceInfo.hpp">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="ae\gfx_low\QueueType.hpp">
+    <ClInclude Include="ae\gfx_low\QueueCreateInfo.hpp">
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ae\gfx_low\QueuePriority.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\QueueType.hpp" />
     <ClInclude Include="ae\gfx_low\SdkHeader.hpp">
       <SubType>
       </SubType>
@@ -163,6 +176,18 @@
     <ClCompile Include="ae\base\StringTraits.cpp" />
     <ClCompile Include="ae\base\Time.cpp" />
     <ClCompile Include="ae\base\TimeSpan.cpp" />
+    <ClCompile Include="ae\gfx_low\Device.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ae\gfx_low\DeviceCreateInfo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ae\gfx_low\QueueCreateInfo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="ae\gfx_low\System.cpp">
       <SubType>
       </SubType>
