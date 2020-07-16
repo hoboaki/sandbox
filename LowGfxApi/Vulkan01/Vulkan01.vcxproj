@@ -98,6 +98,7 @@
     <ClInclude Include="ae\base\Console.hpp" />
     <ClInclude Include="ae\base\FixedString.hpp" />
     <ClInclude Include="ae\base\FunctionAttribute.hpp" />
+    <ClInclude Include="ae\base\IAllocator.hpp" />
     <ClInclude Include="ae\base\IConsoleCallback.hpp" />
     <ClInclude Include="ae\base\IRuntimeErrorCallback.hpp" />
     <ClInclude Include="ae\base\NewLine.hpp" />
@@ -109,6 +110,11 @@
     <ClInclude Include="ae\base\PodTypes.hpp" />
     <ClInclude Include="ae\base\Pointer.hpp" />
     <ClInclude Include="ae\base\PointerCheck.hpp" />
+    <ClInclude Include="ae\base\PtrToRef.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ae\base\RuntimeArray.hpp" />
     <ClInclude Include="ae\base\RuntimeAssert.hpp" />
     <ClInclude Include="ae\base\RuntimeError.hpp" />
     <ClInclude Include="ae\base\ScalerClass.hpp" />
@@ -167,6 +173,7 @@
   <ItemGroup>
     <ClCompile Include="ae\base\Calendar.cpp" />
     <ClCompile Include="ae\base\Console.cpp" />
+    <ClCompile Include="ae\base\IAllocator.cpp" />
     <ClCompile Include="ae\base\IConsoleCallback.cpp" />
     <ClCompile Include="ae\base\IRuntimeErrorCallback.cpp" />
     <ClCompile Include="ae\base\PointerCheck.cpp" />

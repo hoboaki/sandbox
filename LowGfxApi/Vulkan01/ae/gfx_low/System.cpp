@@ -1,5 +1,7 @@
 // 文字コード：UTF-8
 #include <ae/base/ArrayLength.hpp>
+#include <ae/base/IAllocator.hpp>
+#include <ae/base/PtrToRef.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
 #include <ae/gfx_low/System.hpp>
@@ -32,7 +34,14 @@ bool fCheckLayers(uint32_t checkCount, char const* const* const checkNames,
 }  // namespace
 
 //------------------------------------------------------------------------------
-System::System(const SystemCreateInfo& createInfo) {
+System::System(const SystemCreateInfo& createInfo)
+: objectAllocator_(createInfo.ObjectAllocator() == nullptr
+                       ? ::ae::base::IAllocator::Default()
+                       : ::ae::base::PtrToRef(createInfo.ObjectAllocator()))
+, tempWorkAllocator_(
+      createInfo.TempWorkAllocator() == nullptr
+          ? ::ae::base::IAllocator::Default()
+          : ::ae::base::PtrToRef(createInfo.TempWorkAllocator())) {
     // 複数作成防止
     AE_BASE_ASSERT(!IsInstanceCreated);
     IsInstanceCreated = true;
@@ -227,8 +236,8 @@ PhysicalDeviceInfo System::PhysicalDeviceInfo(
         ::vk::QueueFamilyProperties queueFamilyProperties[queueFamilyCountMax] =
             {};
         uint32_t queueFamilyCount = 0;
-        device.getQueueFamilyProperties(
-            &queueFamilyCount, static_cast<::vk::QueueFamilyProperties*>(nullptr));
+        device.getQueueFamilyProperties(&queueFamilyCount,
+            static_cast<::vk::QueueFamilyProperties*>(nullptr));
         AE_BASE_ASSERT_LESS(queueFamilyCount, queueFamilyCountMax);
         device.getQueueFamilyProperties(
             &queueFamilyCount, queueFamilyProperties);
@@ -238,10 +247,9 @@ PhysicalDeviceInfo System::PhysicalDeviceInfo(
             // Normal
             const auto& queueProps = queueFamilyProperties[i];
             if (info.creatableQueueCount(QueueType::Normal) == 0 &&
-                queueProps.queueFlags |
-                    ::vk::QueueFlagBits::eGraphics) {
-                info.internalCreatableQueueCounts[int(
-                    QueueType::Normal)] = int(queueProps.queueCount);
+                queueProps.queueFlags | ::vk::QueueFlagBits::eGraphics) {
+                info.internalCreatableQueueCounts[int(QueueType::Normal)] =
+                    int(queueProps.queueCount);
             }
 
             // ComputeOnly

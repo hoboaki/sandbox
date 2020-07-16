@@ -1,6 +1,7 @@
 // 文字コード：UTF-8
 #pragma once
 
+#include <ae/base/IAllocator.hpp>
 #include <ae/base/Pointer.hpp>
 #include <ae/base/Noncopyable.hpp>
 #include <ae/gfx_low/SdkHeader.hpp>
@@ -40,6 +41,16 @@ public:
     void DumpAllPhysicalDeviceInfo() const;
     //@}
 
+    /// @name 内部処理用
+    //@{
+    ::ae::base::IAllocator& internalObjectAllocator() const {
+        return objectAllocator_;
+    }
+    ::ae::base::IAllocator& internalTempWorkAllocator() const {
+        return tempWorkAllocator_;
+    }
+    //@}
+
 private:
     static const int PhysicalDeviceCountMax = 16;
     static const int ExtensionCountMax = 64;
@@ -47,6 +58,8 @@ private:
 
     static bool IsInstanceCreated;
 
+    ::ae::base::IAllocator& objectAllocator_;
+    ::ae::base::IAllocator& tempWorkAllocator_;
     ::vk::Instance instance_;
     int enabledExtensionCount_ = 0;
     int enabledLayerCount_ = 0;

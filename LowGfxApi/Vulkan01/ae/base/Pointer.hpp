@@ -20,6 +20,9 @@ public:
     //@{
     Pointer()
     : ptr_(0) {}
+    Pointer(T* aObj)
+    : ptr_(aObj) {
+    }
     Pointer(T& aObj)
     : ptr_(0) {
         set(aObj);
