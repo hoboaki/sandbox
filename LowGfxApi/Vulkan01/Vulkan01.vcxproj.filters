@@ -240,9 +240,6 @@
     <ClCompile Include="ae\gfx_low\QueueCreateInfo.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ae\gfx_low\DeviceCreateInfo.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="ae\gfx_low\Device.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>

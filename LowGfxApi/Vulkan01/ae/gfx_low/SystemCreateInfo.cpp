@@ -17,20 +17,6 @@ SystemCreateInfo& SystemCreateInfo::SetDebugLevel(
     return *this;
 }
 
-//------------------------------------------------------------------------------
-SystemCreateInfo& SystemCreateInfo::SetObjectAllocator(
-    ::ae::base::IAllocator* allocator) {
-    objectAllocator_.reset(allocator);
-    return *this;
-}
-
-//------------------------------------------------------------------------------
-SystemCreateInfo& SystemCreateInfo::SetTempWorkAllocator(
-    ::ae::base::IAllocator* allocator) {
-    tempWorkAllocator_.reset(allocator);
-    return *this;
-}
-
 }  // namespace gfx_low
 }  // namespace ae
 // EOF

@@ -33,7 +33,10 @@ public:
     ::ae::base::IAllocator* ObjectAllocator() const {
         return objectAllocator_.get();
     }
-    SystemCreateInfo& SetObjectAllocator(::ae::base::IAllocator* allocator);
+    SystemCreateInfo& SetObjectAllocator(::ae::base::IAllocator* allocator) {
+        objectAllocator_.reset(allocator);
+        return *this;
+    }
     //@}
 
     /// @name 関数内で確保・関数終了時に解放されるメモリ用のアロケータ。nullptr 時はデフォルトアロケータを使用。（初期値：nullptr）
@@ -41,7 +44,10 @@ public:
     ::ae::base::IAllocator* TempWorkAllocator() const {
         return tempWorkAllocator_.get();
     }
-    SystemCreateInfo& SetTempWorkAllocator(::ae::base::IAllocator* allocator);
+    SystemCreateInfo& SetTempWorkAllocator(::ae::base::IAllocator* allocator) {
+        tempWorkAllocator_.reset(allocator);
+        return *this;
+    }
     //@}
 
 

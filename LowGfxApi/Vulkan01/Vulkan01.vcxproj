@@ -187,10 +187,6 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="ae\gfx_low\DeviceCreateInfo.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="ae\gfx_low\QueueCreateInfo.cpp">
       <SubType>
       </SubType>
