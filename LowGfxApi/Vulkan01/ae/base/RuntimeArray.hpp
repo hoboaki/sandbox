@@ -64,7 +64,7 @@ public:
             }
 
             ValueType* ptr = ptr_;
-            ptr_ = 0;
+            ptr_ = nullptr;
             allocator_->free(reinterpret_cast<ptr_t>(ptr));
             count_ = 0;
         }
