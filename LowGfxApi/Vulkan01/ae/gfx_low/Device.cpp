@@ -1,9 +1,12 @@
 // 文字コード：UTF-8
+#include <ae/gfx_low/Device.hpp>
+
+// includes
+#include <ae/base/EnumKeyArray.hpp>
 #include <ae/base/Placement.hpp>
 #include <ae/base/PtrToRef.hpp>
 #include <ae/base/RuntimeArray.hpp>
 #include <ae/base/RuntimeAssert.hpp>
-#include <ae/gfx_low/Device.hpp>
 #include <ae/gfx_low/DeviceCreateInfo.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
 #include <ae/gfx_low/QueueCreateInfo.hpp>
@@ -33,11 +36,11 @@ Device::Device(const DeviceCreateInfo& createInfo)
 #if defined(AE_BASE_CONFIG_ENABLE_RUNTIME_ERROR)
     // Queue の作成数が上限を越えていないかのチェック
     {
-        std::array<int, static_cast<int>(QueueType::TERM)> queueCounts;
+        ::ae::base::EnumKeyArray<QueueType, int> queueCounts;
         for (int i = 0; i < createInfo.QueueCreateInfoCount(); ++i) {
-            ++queueCounts[int(createInfo.QueueCrateInfos()[i].Type())];
+            ++queueCounts[createInfo.QueueCrateInfos()[i].Type()];
         }
-        for (int i = 0; i < int(queueCounts.size()); ++i) {
+        for (int i = 0; i < int(queueCounts.count()); ++i) {
             if (physicalDeviceInfo.CreatableQueueCount(QueueType(i)) <
                 queueCounts[i]) {
                 AE_BASE_ASSERT_NOT_REACHED_MSGFMT(
@@ -49,8 +52,8 @@ Device::Device(const DeviceCreateInfo& createInfo)
 #endif
 
     // 各 QueueType の作成総数とIndex表を作成
-    std::array<int, static_cast<int>(QueueType::TERM)> queueCountTable =
-        {};  // QueueType ごとの作成総数
+    ::ae::base::EnumKeyArray<QueueType, int>
+        queueCountTable;  // QueueType ごとの作成総数
     ::ae::base::RuntimeArray<int> indexInQueueTypeTable(queueCreateCount,
         &system_
              .InternalTempWorkAllocator());  // 各 Queue が同じ QueueType
@@ -58,16 +61,16 @@ Device::Device(const DeviceCreateInfo& createInfo)
     for (int queueIdx = 0; queueIdx < queueCreateCount; ++queueIdx) {
         const auto& queueCreateInfo = queueCreateInfos[queueIdx];
         indexInQueueTypeTable[queueIdx] =
-            queueCountTable[int(queueCreateInfo.Type())];
-        ++queueCountTable[int(queueCreateInfo.Type())];
+            queueCountTable[queueCreateInfo.Type()];
+        ++queueCountTable[queueCreateInfo.Type()];
     }
 
     // 各 QueueFamily ごとの Priority 配列を作成
-    std::array<::ae::base::Placement<::ae::base::RuntimeArray<float>>,
-        static_cast<int>(QueueType::TERM)>
+    ::ae::base::EnumKeyArray<QueueType,
+        ::ae::base::Placement<::ae::base::RuntimeArray<float>>>
         queuePriorityTable;
     for (int queueType = 0; queueType < int(QueueType::TERM); ++queueType) {
-        const auto queueCount = queueCountTable[int(queueType)];
+        const auto queueCount = queueCountTable[queueType];
         if (queueCount == 0) {
             continue;
         }
@@ -80,12 +83,12 @@ Device::Device(const DeviceCreateInfo& createInfo)
         const auto priorityEnum = queueCreateInfos[queueIdx].Priority();
         AE_BASE_ASSERT_ENUM(priorityEnum, QueuePriority);
         const float priority = priorityTable[int(priorityEnum)];
-        (*queuePriorityTable[int(
-            queueCreateInfos[queueIdx].Type())])[indexInQueueType] = priority;
+        (*queuePriorityTable[queueCreateInfos[queueIdx]
+                                 .Type()])[indexInQueueType] = priority;
     }
 
     // QueueType -> QueueFamilyIndex テーブル
-    std::array<int, static_cast<int>(QueueType::TERM)> queueFamilyIndexTable;
+    System::InternalQueueFamilyIndexTableType queueFamilyIndexTable;
     system_.InternalQueueFamilyIndexTable(
         &queueFamilyIndexTable, physicalDeviceIndex);
 

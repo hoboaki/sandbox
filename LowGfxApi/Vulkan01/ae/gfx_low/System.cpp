@@ -241,8 +241,7 @@ PhysicalDeviceInfo System::PhysicalDeviceInfo(
         device.getQueueFamilyProperties(
             &queueFamilyCount, queueFamilyProperties);
 
-        std::array<int, static_cast<int>(QueueType::TERM)>
-            queueFamilyIndexTable;
+        InternalQueueFamilyIndexTableType queueFamilyIndexTable;
         InternalQueueFamilyIndexTable(
             &queueFamilyIndexTable, physicalDeviceIndex);
 
@@ -297,7 +296,7 @@ void System::DumpAllPhysicalDeviceInfo() const {
 
 //------------------------------------------------------------------------------
 void System::InternalQueueFamilyIndexTable(
-    std::array<int, static_cast<int>(QueueType::TERM)>* result,
+    InternalQueueFamilyIndexTableType* result,
     const int physicalDeviceIndex) const {
     auto& resultRef = ::ae::base::PtrToRef(result);
     AE_BASE_ASSERT_LESS(physicalDeviceIndex, physicalDeviceCount_);
@@ -316,21 +315,21 @@ void System::InternalQueueFamilyIndexTable(
     for (uint32_t i = 0; i < queueFamilyCount; ++i) {
         // Normal
         const auto& queueProps = queueFamilyProperties[i];
-        if (resultRef[int(QueueType::Normal)] < 0 &&
+        if (resultRef[QueueType::Normal] < 0 &&
             queueProps.queueFlags | ::vk::QueueFlagBits::eGraphics) {
-            resultRef[int(QueueType::Normal)] = int(i);
+            resultRef[QueueType::Normal] = int(i);
         }
 
         // ComputeOnly
-        if (resultRef[int(QueueType::ComputeOnly)] < 0 &&
+        if (resultRef[QueueType::ComputeOnly] < 0 &&
             queueProps.queueFlags == ::vk::QueueFlagBits::eCompute) {
-            resultRef[int(QueueType::ComputeOnly)] = int(i);
+            resultRef[QueueType::ComputeOnly] = int(i);
         }
 
         // CopyOnly
-        if (resultRef[int(QueueType::CopyOnly)] < 0 &&
+        if (resultRef[QueueType::CopyOnly] < 0 &&
             queueProps.queueFlags == ::vk::QueueFlagBits::eTransfer) {
-            resultRef[int(QueueType::CopyOnly)] = int(i);
+            resultRef[QueueType::CopyOnly] = int(i);
         }
     }
 }

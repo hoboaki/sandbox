@@ -1,16 +1,18 @@
 // 文字コード：UTF-8
 #pragma once
 
+#include <ae/base/EnumKeyArray.hpp>
 #include <ae/base/IAllocator.hpp>
-#include <ae/base/Pointer.hpp>
 #include <ae/base/Noncopyable.hpp>
+#include <ae/base/Pointer.hpp>
 #include <ae/gfx_low/SdkHeader.hpp>
 
 namespace ae {
 namespace gfx_low {
 class PhysicalDeviceInfo;
 class SystemCreateInfo;
-}}  // namespace ae
+}  // namespace gfx_low
+}  // namespace ae
 
 //------------------------------------------------------------------------------
 namespace ae {
@@ -19,14 +21,15 @@ namespace gfx_low {
 /// グラフィックスライブラリシステムを扱うクラス。
 /// @details
 /// 何よりも最初にインスタンス化する必要があるオブジェクト。２つ以上作ることはできない。
-/// このクラスの生成後、Device 等の生成をしてグラフィックス機能を扱える状態にしていく。
+/// このクラスの生成後、Device
+/// 等の生成をしてグラフィックス機能を扱える状態にしていく。
 class System : base::Noncopyable<System> {
 public:
-	/// @name コンストラクタとデストラクタ
-	//@{
+    /// @name コンストラクタとデストラクタ
+    //@{
     System(const SystemCreateInfo& createInfo);
     ~System();
-	//@}
+    //@}
 
     /// @name 情報取得
     //@{
@@ -51,9 +54,12 @@ public:
         return tempWorkAllocator_;
     }
 
-    /// QueueType に対応する QueueFamilyIndex を返す。見つからない場合は負の値を返す。
+    /// QueueType に対応する QueueFamilyIndex を格納するテーブルの型。
+    using InternalQueueFamilyIndexTableType = ::ae::base::EnumKeyArray<QueueType, int>;
+
+    /// を返す。見つからない場合は負の値を返す。
     void InternalQueueFamilyIndexTable(
-        std::array<int, static_cast<int>(QueueType::TERM)>* result,
+        InternalQueueFamilyIndexTableType* result,
         int physicalDeviceIndex) const;
 
     const ::vk::PhysicalDevice& InternalPhysicalDevice(
