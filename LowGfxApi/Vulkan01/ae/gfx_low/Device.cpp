@@ -1,27 +1,30 @@
 // 文字コード：UTF-8
-#include <ae/gfx_low/Device.hpp>
-
-#include <array>
+#include <ae/base/Placement.hpp>
 #include <ae/base/PtrToRef.hpp>
-#include <ae/base/RuntimeAssert.hpp>
 #include <ae/base/RuntimeArray.hpp>
+#include <ae/base/RuntimeAssert.hpp>
+#include <ae/gfx_low/Device.hpp>
 #include <ae/gfx_low/DeviceCreateInfo.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
 #include <ae/gfx_low/QueueCreateInfo.hpp>
 #include <ae/gfx_low/System.hpp>
+#include <array>
 
 //------------------------------------------------------------------------------
 namespace ae {
 namespace gfx_low {
 
 //------------------------------------------------------------------------------
-Device::Device(const DeviceCreateInfo& createInfo) {
-    auto& system = ::ae::base::PtrToRef(createInfo.System());
+Device::Device(const DeviceCreateInfo& createInfo)
+: system_(::ae::base::PtrToRef(createInfo.System()))
+, device_()
+, queues_(createInfo.QueueCreateInfoCount(),
+      ::ae::base::PtrToRef(createInfo.System()).InternalObjectAllocator()) {
     const auto physicalDeviceIndex = createInfo.PhysicalDeviceIndex();
     AE_BASE_ASSERT_MIN_TERM(
-        0, physicalDeviceIndex, system.PhysicalDeviceCount());
+        0, physicalDeviceIndex, system_.PhysicalDeviceCount());
     const auto physicalDeviceInfo =
-        system.PhysicalDeviceInfo(physicalDeviceIndex);
+        system_.PhysicalDeviceInfo(physicalDeviceIndex);
     const auto queueCreateCount = createInfo.QueueCreateInfoCount();
     AE_BASE_ASSERT_LESS(0, queueCreateCount);
     const auto* queueCreateInfos = createInfo.QueueCrateInfos();
@@ -35,7 +38,7 @@ Device::Device(const DeviceCreateInfo& createInfo) {
             ++queueCounts[int(createInfo.QueueCrateInfos()[i].Type())];
         }
         for (int i = 0; i < int(queueCounts.size()); ++i) {
-            if (physicalDeviceInfo.creatableQueueCount(QueueType(i)) <
+            if (physicalDeviceInfo.CreatableQueueCount(QueueType(i)) <
                 queueCounts[i]) {
                 AE_BASE_ASSERT_NOT_REACHED_MSGFMT(
                     "Create queue count (for QueueType: %d) is too large.",
@@ -45,17 +48,126 @@ Device::Device(const DeviceCreateInfo& createInfo) {
     }
 #endif
 
-    // デバイス作成
-    //::ae::base::RuntimeArray<::vk::DeviceQueueCreateInfo> vulkanQueueCreateInfos(
-    //    queueCreateCount, system.internalTempWorkAllocator()
-    //    );
-    //for (int i = 0; i < queueCreateCount; ++i) {
-    //    auto& target = vulkanQueueCreateInfos[i];
-    //}
+    // 各 QueueType の作成総数とIndex表を作成
+    std::array<int, static_cast<int>(QueueType::TERM)> queueCountTable =
+        {};  // QueueType ごとの作成総数
+    ::ae::base::RuntimeArray<int> indexInQueueTypeTable(queueCreateCount,
+        &system_
+             .InternalTempWorkAllocator());  // 各 Queue が同じ QueueType
+                                             // における何個目の Queue かの情報
+    for (int queueIdx = 0; queueIdx < queueCreateCount; ++queueIdx) {
+        const auto& queueCreateInfo = queueCreateInfos[queueIdx];
+        indexInQueueTypeTable[queueIdx] =
+            queueCountTable[int(queueCreateInfo.Type())];
+        ++queueCountTable[int(queueCreateInfo.Type())];
+    }
+
+    // 各 QueueFamily ごとの Priority 配列を作成
+    std::array<::ae::base::Placement<::ae::base::RuntimeArray<float>>,
+        static_cast<int>(QueueType::TERM)>
+        queuePriorityTable;
+    for (int queueType = 0; queueType < int(QueueType::TERM); ++queueType) {
+        const auto queueCount = queueCountTable[int(queueType)];
+        if (queueCount == 0) {
+            continue;
+        }
+        queuePriorityTable[queueType].init(
+            queueCount, &system_.InternalTempWorkAllocator());
+    }
+    const float priorityTable[int(QueuePriority::TERM)] = {0.0f, 0.5f, 1.0f};
+    for (int queueIdx = 0; queueIdx < queueCreateCount; ++queueIdx) {
+        const auto indexInQueueType = indexInQueueTypeTable[queueIdx];
+        const auto priorityEnum = queueCreateInfos[queueIdx].Priority();
+        AE_BASE_ASSERT_ENUM(QueuePriority, priorityEnum);
+        const float priority = priorityTable[int(priorityEnum)];
+        (*queuePriorityTable[int(
+            queueCreateInfos[queueIdx].Type())])[indexInQueueType] = priority;
+    }
+
+    // QueueType -> QueueFamilyIndex テーブル
+    std::array<int, static_cast<int>(QueueType::TERM)> queueFamilyIndexTable;
+    system_.InternalQueueFamilyIndexTable(
+        &queueFamilyIndexTable, physicalDeviceIndex);
+
+    // SwapchainExtension対応
+    const auto& physicalDevice =
+        system_.InternalPhysicalDevice(physicalDeviceIndex);
+    uint32_t enabledExtensionCount = 0;
+    const int extensionCountMax = 64;
+    const char* extensionNames[extensionCountMax] = {};
+    ::vk::Bool32 swapchainExtFound = VK_FALSE;
+    {
+        uint32_t deviceExtensionCount = 0;
+        auto result = physicalDevice.enumerateDeviceExtensionProperties(nullptr,
+            &deviceExtensionCount,
+            static_cast<vk::ExtensionProperties*>(nullptr));
+        AE_BASE_ASSERT(result == vk::Result::eSuccess);
+
+        if (0 < deviceExtensionCount) {
+            std::unique_ptr<vk::ExtensionProperties[]> device_extensions(
+                new vk::ExtensionProperties[deviceExtensionCount]);
+            result = physicalDevice.enumerateDeviceExtensionProperties(
+                nullptr, &deviceExtensionCount, device_extensions.get());
+            AE_BASE_ASSERT(result == vk::Result::eSuccess);
+
+            for (uint32_t i = 0; i < deviceExtensionCount; i++) {
+                if (!std::strcmp(VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+                        device_extensions[i].extensionName)) {
+                    swapchainExtFound = 1;
+                    extensionNames[enabledExtensionCount++] =
+                        VK_KHR_SWAPCHAIN_EXTENSION_NAME;
+                }
+                AE_BASE_ASSERT(enabledExtensionCount < extensionCountMax);
+            }
+        }
+
+        if (!swapchainExtFound) {
+            AE_BASE_ASSERT_NOT_REACHED_MSG(
+                "vkEnumerateDeviceExtensionProperties failed to find "
+                "the " VK_KHR_SWAPCHAIN_EXTENSION_NAME
+                " extension.\n\n"
+                "Do you have a compatible Vulkan installable client driver "
+                "(ICD) "
+                "installed?\n"
+                "Please look at the Getting Started guide for additional "
+                "information.\n");
+        }
+    }
+
+    // vkDeviceQueueCreateInfo の作成
+    std::array<::vk::DeviceQueueCreateInfo, static_cast<int>(QueueType::TERM)>
+        deviceQueueCreateInfos;
+    int deviceQueueCreateInfoCount = 0;
+    for (int queueType = 0; queueType < int(QueueType::TERM); ++queueType) {
+        if (queueCountTable[queueType] == 0) {
+            continue;
+        }
+        auto& target = deviceQueueCreateInfos[queueType];
+        target.setQueueFamilyIndex(queueFamilyIndexTable[queueType]);
+        target.setQueueCount(queueCountTable[queueType]);
+        target.setPQueuePriorities(&(*queuePriorityTable[queueType])[0]);
+        ++deviceQueueCreateInfoCount;
+    }
+    auto deviceInfo = vk::DeviceCreateInfo()
+                          .setQueueCreateInfoCount(queueCreateCount)
+                          .setPQueueCreateInfos(&deviceQueueCreateInfos[0])
+                          .setEnabledLayerCount(0)
+                          .setPpEnabledLayerNames(nullptr)
+                          .setEnabledExtensionCount(enabledExtensionCount)
+                          .setPpEnabledExtensionNames(extensionNames)
+                          .setPEnabledFeatures(nullptr);
+    {
+        auto result =
+            physicalDevice.createDevice(&deviceInfo, nullptr, &device_);
+        AE_BASE_ASSERT(result == vk::Result::eSuccess);
+    }
 }
 
 //------------------------------------------------------------------------------
-Device::~Device() {}
+Device::~Device() {
+    device_.destroy(nullptr);
+    device_ = ::vk::Device();
+}
 
 }  // namespace gfx_low
 }  // namespace ae

@@ -7,6 +7,7 @@
 #include <ae/base/IAllocator.hpp>
 #include <ae/base/Noncopyable.hpp>
 #include <ae/base/RuntimeAssert.hpp>
+#include <ae/base/PtrToRef.hpp>
 
 //------------------------------------------------------------------------------
 namespace ae {
@@ -32,6 +33,8 @@ public:
     /// @param aAllocator 配列データを確保する際に使用するアロケータ。
     /// @details 
     /// 配列長が0の場合、アロケートは走りません。
+    RuntimeArray(int aCount, IAllocator* aAllocator = &IAllocator::Default())
+        : RuntimeArray(aCount, PtrToRef(aAllocator)) {}
     RuntimeArray(int aCount, IAllocator& aAllocator = IAllocator::Default())
         : mAllocator(aAllocator)
         , mCount(aCount)

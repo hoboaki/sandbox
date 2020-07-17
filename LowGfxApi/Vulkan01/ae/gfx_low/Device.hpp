@@ -1,9 +1,14 @@
 // 文字コード：UTF-8
 #pragma once
 
+#include <ae/base/RuntimeArray.hpp>
+#include <ae/gfx_low/SdkHeader.hpp>
+
 namespace ae {
 namespace gfx_low {
 class DeviceCreateInfo;
+class Queue;
+class System;
 }
 }  // namespace ae
 
@@ -19,6 +24,12 @@ public:
     Device(const DeviceCreateInfo& createInfo);
     ~Device();
     //@}
+
+private:
+    System& system_;
+    ::vk::Device device_;
+    ::ae::base::RuntimeArray<Queue*> queues_;
+
 };
 
 }  // namespace gfx_low

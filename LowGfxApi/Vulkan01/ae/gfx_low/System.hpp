@@ -43,11 +43,22 @@ public:
 
     /// @name 内部処理用
     //@{
-    ::ae::base::IAllocator& internalObjectAllocator() const {
+    ::ae::base::IAllocator& InternalObjectAllocator() const {
         return objectAllocator_;
     }
-    ::ae::base::IAllocator& internalTempWorkAllocator() const {
+
+    ::ae::base::IAllocator& InternalTempWorkAllocator() const {
         return tempWorkAllocator_;
+    }
+
+    /// QueueType に対応する QueueFamilyIndex を返す。見つからない場合は負の値を返す。
+    void InternalQueueFamilyIndexTable(
+        std::array<int, static_cast<int>(QueueType::TERM)>* result,
+        int physicalDeviceIndex) const;
+
+    const ::vk::PhysicalDevice& InternalPhysicalDevice(
+        int physicalDeviceIndex) const {
+        return physicalDevices_[physicalDeviceIndex];
     }
     //@}
 
@@ -55,6 +66,7 @@ private:
     static const int PhysicalDeviceCountMax = 16;
     static const int ExtensionCountMax = 64;
     static const int LayerCountMax = 64;
+    static const int QueueFamilyCountMax = 8;
 
     static bool IsInstanceCreated;
 
@@ -64,9 +76,9 @@ private:
     int enabledExtensionCount_ = 0;
     int enabledLayerCount_ = 0;
     int physicalDeviceCount_ = 0;
-    char const* extensionNames_[ExtensionCountMax] = {};
-    char const* enabledLayers_[LayerCountMax] = {};
-    ::vk::PhysicalDevice physicalDevices_[PhysicalDeviceCountMax] = {};
+    const char* extensionNames_[ExtensionCountMax] = {};
+    const char* enabledLayers_[LayerCountMax] = {};
+    std::array<::vk::PhysicalDevice, PhysicalDeviceCountMax> physicalDevices_;
 };
 
 }  // namespace gfx_low

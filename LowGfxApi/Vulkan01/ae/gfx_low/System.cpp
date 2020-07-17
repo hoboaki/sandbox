@@ -205,7 +205,7 @@ System::System(const SystemCreateInfo& createInfo)
         AE_BASE_ASSERT_MIN_TERM(
             1, int(physicalDeviceCount), PhysicalDeviceCountMax);
         result = instance_.enumeratePhysicalDevices(
-            &physicalDeviceCount, physicalDevices_);
+            &physicalDeviceCount, &physicalDevices_[0]);
         AE_BASE_ASSERT(result == vk::Result::eSuccess);
         physicalDeviceCount_ = int(physicalDeviceCount);
     }
@@ -232,38 +232,47 @@ PhysicalDeviceInfo System::PhysicalDeviceInfo(
 
     // Queue 特性
     {
-        const uint32_t queueFamilyCountMax = 8;
-        ::vk::QueueFamilyProperties queueFamilyProperties[queueFamilyCountMax] =
+        ::vk::QueueFamilyProperties queueFamilyProperties[QueueFamilyCountMax] =
             {};
         uint32_t queueFamilyCount = 0;
         device.getQueueFamilyProperties(&queueFamilyCount,
             static_cast<::vk::QueueFamilyProperties*>(nullptr));
-        AE_BASE_ASSERT_LESS(queueFamilyCount, queueFamilyCountMax);
+        AE_BASE_ASSERT_LESS(queueFamilyCount, QueueFamilyCountMax);
         device.getQueueFamilyProperties(
             &queueFamilyCount, queueFamilyProperties);
 
-        // 最初に見つかった物を採用する
-        for (uint32_t i = 0; i < queueFamilyCount; ++i) {
-            // Normal
-            const auto& queueProps = queueFamilyProperties[i];
-            if (info.creatableQueueCount(QueueType::Normal) == 0 &&
-                queueProps.queueFlags | ::vk::QueueFlagBits::eGraphics) {
-                info.internalCreatableQueueCounts[int(QueueType::Normal)] =
-                    int(queueProps.queueCount);
-            }
+        std::array<int, static_cast<int>(QueueType::TERM)>
+            queueFamilyIndexTable;
+        InternalQueueFamilyIndexTable(
+            &queueFamilyIndexTable, physicalDeviceIndex);
 
-            // ComputeOnly
-            if (info.creatableQueueCount(QueueType::ComputeOnly) == 0 &&
-                queueProps.queueFlags == ::vk::QueueFlagBits::eCompute) {
-                info.internalCreatableQueueCounts[int(QueueType::ComputeOnly)] =
-                    int(queueProps.queueCount);
+        // Normal
+        {
+            const auto queueFamilyIndex =
+                queueFamilyIndexTable[int(QueueType::Normal)];
+            if (0 <= queueFamilyIndex) {
+                info.InternalCreatableQueueCounts[int(QueueType::Normal)] =
+                    int(queueFamilyProperties[queueFamilyIndex].queueCount);
             }
+        }
 
-            // CopyOnly
-            if (info.creatableQueueCount(QueueType::CopyOnly) == 0 &&
-                queueProps.queueFlags == ::vk::QueueFlagBits::eTransfer) {
-                info.internalCreatableQueueCounts[int(QueueType::CopyOnly)] =
-                    int(queueProps.queueCount);
+        // ComputeOnly
+        {
+            const auto queueFamilyIndex =
+                queueFamilyIndexTable[int(QueueType::ComputeOnly)];
+            if (0 <= queueFamilyIndex) {
+                info.InternalCreatableQueueCounts[int(QueueType::ComputeOnly)] =
+                    int(queueFamilyProperties[queueFamilyIndex].queueCount);
+            }
+        }
+
+        // CopyOnly
+        {
+            const auto queueFamilyIndex =
+                queueFamilyIndexTable[int(QueueType::CopyOnly)];
+            if (0 <= queueFamilyIndex) {
+                info.InternalCreatableQueueCounts[int(QueueType::CopyOnly)] =
+                    int(queueFamilyProperties[queueFamilyIndex].queueCount);
             }
         }
     }
@@ -278,11 +287,51 @@ void System::DumpAllPhysicalDeviceInfo() const {
         const auto info = PhysicalDeviceInfo(i);
         AE_BASE_COUTFMT_LINE("    PhysicalDevice #%d:", i);
         AE_BASE_COUTFMT_LINE("        CreatableQueueCount[Normal]: %d",
-            info.creatableQueueCount(QueueType::Normal));
+            info.CreatableQueueCount(QueueType::Normal));
         AE_BASE_COUTFMT_LINE("        CreatableQueueCount[ComputeOnly]: %d",
-            info.creatableQueueCount(QueueType::ComputeOnly));
+            info.CreatableQueueCount(QueueType::ComputeOnly));
         AE_BASE_COUTFMT_LINE("        CreatableQueueCount[CopyOnly]: %d",
-            info.creatableQueueCount(QueueType::CopyOnly));
+            info.CreatableQueueCount(QueueType::CopyOnly));
+    }
+}
+
+//------------------------------------------------------------------------------
+void System::InternalQueueFamilyIndexTable(
+    std::array<int, static_cast<int>(QueueType::TERM)>* result,
+    const int physicalDeviceIndex) const {
+    auto& resultRef = ::ae::base::PtrToRef(result);
+    AE_BASE_ASSERT_LESS(physicalDeviceIndex, physicalDeviceCount_);
+    const auto device = physicalDevices_[physicalDeviceIndex];
+    ::vk::QueueFamilyProperties queueFamilyProperties[QueueFamilyCountMax] = {};
+    uint32_t queueFamilyCount = 0;
+    device.getQueueFamilyProperties(
+        &queueFamilyCount, static_cast<::vk::QueueFamilyProperties*>(nullptr));
+    AE_BASE_ASSERT_LESS(queueFamilyCount, QueueFamilyCountMax);
+    device.getQueueFamilyProperties(&queueFamilyCount, queueFamilyProperties);
+
+    // -1 で初期化
+    resultRef.fill(-1);
+
+    // 最初に見つかった物を採用する
+    for (uint32_t i = 0; i < queueFamilyCount; ++i) {
+        // Normal
+        const auto& queueProps = queueFamilyProperties[i];
+        if (resultRef[int(QueueType::Normal)] < 0 &&
+            queueProps.queueFlags | ::vk::QueueFlagBits::eGraphics) {
+            resultRef[int(QueueType::Normal)] = int(i);
+        }
+
+        // ComputeOnly
+        if (resultRef[int(QueueType::ComputeOnly)] < 0 &&
+            queueProps.queueFlags == ::vk::QueueFlagBits::eCompute) {
+            resultRef[int(QueueType::ComputeOnly)] = int(i);
+        }
+
+        // CopyOnly
+        if (resultRef[int(QueueType::CopyOnly)] < 0 &&
+            queueProps.queueFlags == ::vk::QueueFlagBits::eTransfer) {
+            resultRef[int(QueueType::CopyOnly)] = int(i);
+        }
     }
 }
 

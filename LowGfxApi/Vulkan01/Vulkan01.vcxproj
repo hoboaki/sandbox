@@ -105,6 +105,7 @@
     <ClInclude Include="ae\base\Noncopyable.hpp" />
     <ClInclude Include="ae\base\Os.hpp" />
     <ClInclude Include="ae\base\OsType.hpp" />
+    <ClInclude Include="ae\base\Placement.hpp" />
     <ClInclude Include="ae\base\PodInheritClass.hpp" />
     <ClInclude Include="ae\base\PodStruct.hpp" />
     <ClInclude Include="ae\base\PodTypes.hpp" />
@@ -116,6 +117,7 @@
     </ClInclude>
     <ClInclude Include="ae\base\RuntimeArray.hpp" />
     <ClInclude Include="ae\base\RuntimeAssert.hpp" />
+    <ClInclude Include="ae\base\RuntimeAutoArray.hpp" />
     <ClInclude Include="ae\base\RuntimeError.hpp" />
     <ClInclude Include="ae\base\ScalerClass.hpp" />
     <ClInclude Include="ae\base\ScalerStruct.hpp" />
