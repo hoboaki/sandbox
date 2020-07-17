@@ -3,7 +3,6 @@
 
 // includes
 #include <ae/base/EnumKeyArray.hpp>
-#include <ae/base/Placement.hpp>
 #include <ae/base/PtrToRef.hpp>
 #include <ae/base/RuntimeArray.hpp>
 #include <ae/base/RuntimeAssert.hpp>
@@ -67,14 +66,14 @@ Device::Device(const DeviceCreateInfo& createInfo)
 
     // 各 QueueFamily ごとの Priority 配列を作成
     ::ae::base::EnumKeyArray<QueueType,
-        ::ae::base::Placement<::ae::base::RuntimeArray<float>>>
+        ::ae::base::RuntimeArray<float>>
         queuePriorityTable;
     for (int queueType = 0; queueType < int(QueueType::TERM); ++queueType) {
         const auto queueCount = queueCountTable[queueType];
         if (queueCount == 0) {
             continue;
         }
-        queuePriorityTable[queueType].init(
+        queuePriorityTable[queueType].resize(
             queueCount, &system_.InternalTempWorkAllocator());
     }
     const float priorityTable[int(QueuePriority::TERM)] = {0.0f, 0.5f, 1.0f};
@@ -83,8 +82,8 @@ Device::Device(const DeviceCreateInfo& createInfo)
         const auto priorityEnum = queueCreateInfos[queueIdx].Priority();
         AE_BASE_ASSERT_ENUM(priorityEnum, QueuePriority);
         const float priority = priorityTable[int(priorityEnum)];
-        (*queuePriorityTable[queueCreateInfos[queueIdx]
-                                 .Type()])[indexInQueueType] = priority;
+        queuePriorityTable[queueCreateInfos[queueIdx].Type()]
+                          [indexInQueueType] = priority;
     }
 
     // QueueType -> QueueFamilyIndex テーブル
@@ -148,7 +147,7 @@ Device::Device(const DeviceCreateInfo& createInfo)
         auto& target = deviceQueueCreateInfos[queueType];
         target.setQueueFamilyIndex(queueFamilyIndexTable[queueType]);
         target.setQueueCount(queueCountTable[queueType]);
-        target.setPQueuePriorities(&(*queuePriorityTable[queueType])[0]);
+        target.setPQueuePriorities(&queuePriorityTable[queueType][0]);
         ++deviceQueueCreateInfoCount;
     }
     auto deviceInfo = vk::DeviceCreateInfo()

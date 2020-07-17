@@ -1,10 +1,12 @@
 // 文字コード：UTF-8
+#include <ae/gfx_low/System.hpp>
+
+// includes
 #include <ae/base/ArrayLength.hpp>
 #include <ae/base/IAllocator.hpp>
 #include <ae/base/PtrToRef.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
-#include <ae/gfx_low/System.hpp>
 #include <ae/gfx_low/SystemCreateInfo.hpp>
 
 //------------------------------------------------------------------------------
