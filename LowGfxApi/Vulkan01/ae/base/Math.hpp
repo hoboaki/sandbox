@@ -115,7 +115,7 @@ struct Math
     template< typename T >
     static const T Interpolation(const T& aVal1, const T& aVal2, const f32 aRate)
     {
-        AE_BASE_ASSERT_MIN_MAX(0.0f, aRate, 1.0f);
+        AE_BASE_ASSERT_MIN_MAX(aRate, 0.0f, 1.0f);
         return aVal1 + (aVal2 - aVal1) * aRate;
     }
     //@}

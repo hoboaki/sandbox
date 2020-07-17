@@ -203,7 +203,7 @@ System::System(const SystemCreateInfo& createInfo)
             &physicalDeviceCount, static_cast<vk::PhysicalDevice*>(nullptr));
         AE_BASE_ASSERT(result == vk::Result::eSuccess);
         AE_BASE_ASSERT_MIN_TERM(
-            1, int(physicalDeviceCount), PhysicalDeviceCountMax);
+            int(physicalDeviceCount), 1, PhysicalDeviceCountMax);
         result = instance_.enumeratePhysicalDevices(
             &physicalDeviceCount, &physicalDevices_[0]);
         AE_BASE_ASSERT(result == vk::Result::eSuccess);

@@ -12,7 +12,7 @@ SystemCreateInfo::SystemCreateInfo() {}
 //------------------------------------------------------------------------------
 SystemCreateInfo& SystemCreateInfo::SetDebugLevel(
     const SystemDebugLevel level) {
-    AE_BASE_ASSERT_ENUM(SystemDebugLevel, level);
+    AE_BASE_ASSERT_ENUM(level, SystemDebugLevel);
     debugLevel_ = level;
     return *this;
 }

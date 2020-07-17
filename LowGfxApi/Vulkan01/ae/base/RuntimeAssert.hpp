@@ -218,7 +218,7 @@ struct RuntimeAssert
 /// @details
 /// アサートに失敗したらそれぞれの値をコンソールにダンプしエラーコールバックをコールします。@n
 /// エラーが無効なときは何もしません。
-#define AE_BASE_ASSERT_MIN_MAX(aMinVal, aVal, aMaxVal) AE_BASE_ASSERT_RANGE_CORE3(AE_BASE_VALUE_IN_RANGE_MIN_MAX, aMinVal ,aVal ,aMaxVal)
+#define AE_BASE_ASSERT_MIN_MAX(aVal, aMinVal, aMaxVal) AE_BASE_ASSERT_RANGE_CORE3(AE_BASE_VALUE_IN_RANGE_MIN_MAX, aMinVal ,aVal ,aMaxVal)
 
 /// @brief aMinVal <= aVal < aTermValであることをチェックする。
 /// @see ae::base::RuntimeError
@@ -226,12 +226,12 @@ struct RuntimeAssert
 /// @details
 /// アサートに失敗したらそれぞれの値をコンソールにダンプしエラーコールバックをコールします。@n
 /// エラーが無効なときは何もしません。
-#define AE_BASE_ASSERT_MIN_TERM(aMinVal, aVal, aTermVal) AE_BASE_ASSERT_RANGE_CORE3(AE_BASE_VALUE_IN_RANGE_MIN_TERM, aMinVal, aVal, aTermVal)
+#define AE_BASE_ASSERT_MIN_TERM(aVal, aMinVal, aTermVal) AE_BASE_ASSERT_RANGE_CORE3(AE_BASE_VALUE_IN_RANGE_MIN_TERM, aMinVal, aVal, aTermVal)
 
-/// @brief aEnumValueがMIN <= aEnumValue <= MAXであることをチェックする。
+/// @brief aEnumValueが 0 <= aEnumValue < TERMであることをチェックする。
 /// @details
-/// 調査するEnumにMINとMAXが定義されている必要があります。
-#define AE_BASE_ASSERT_ENUM(aEnumType , aEnumValue) AE_BASE_ASSERT_MIN_TERM(int(0), int(aEnumValue), int(aEnumType::TERM))
+/// 調査するEnumにTERMが定義されている必要があります。
+#define AE_BASE_ASSERT_ENUM(aEnumValue, aEnumType) AE_BASE_ASSERT_MIN_TERM(int(aEnumValue), int(0), int(aEnumType::TERM))
 
 //@}
 //@}

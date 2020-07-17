@@ -22,7 +22,7 @@ Device::Device(const DeviceCreateInfo& createInfo)
       ::ae::base::PtrToRef(createInfo.System()).InternalObjectAllocator()) {
     const auto physicalDeviceIndex = createInfo.PhysicalDeviceIndex();
     AE_BASE_ASSERT_MIN_TERM(
-        0, physicalDeviceIndex, system_.PhysicalDeviceCount());
+        physicalDeviceIndex, 0, system_.PhysicalDeviceCount());
     const auto physicalDeviceInfo =
         system_.PhysicalDeviceInfo(physicalDeviceIndex);
     const auto queueCreateCount = createInfo.QueueCreateInfoCount();
@@ -78,7 +78,7 @@ Device::Device(const DeviceCreateInfo& createInfo)
     for (int queueIdx = 0; queueIdx < queueCreateCount; ++queueIdx) {
         const auto indexInQueueType = indexInQueueTypeTable[queueIdx];
         const auto priorityEnum = queueCreateInfos[queueIdx].Priority();
-        AE_BASE_ASSERT_ENUM(QueuePriority, priorityEnum);
+        AE_BASE_ASSERT_ENUM(priorityEnum, QueuePriority);
         const float priority = priorityTable[int(priorityEnum)];
         (*queuePriorityTable[int(
             queueCreateInfos[queueIdx].Type())])[indexInQueueType] = priority;

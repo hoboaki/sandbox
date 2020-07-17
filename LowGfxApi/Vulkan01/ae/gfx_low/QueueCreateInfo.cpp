@@ -9,14 +9,14 @@ namespace gfx_low {
 
 //------------------------------------------------------------------------------
 QueueCreateInfo& QueueCreateInfo::SetType(const QueueType type) {
-    AE_BASE_ASSERT_ENUM(QueueType, type);
+    AE_BASE_ASSERT_ENUM(type, QueueType);
     type_ = type;
     return *this;
 }
 
 //------------------------------------------------------------------------------
 QueueCreateInfo& QueueCreateInfo::SetPriority(const QueuePriority priority) {
-    AE_BASE_ASSERT_ENUM(QueuePriority, priority);
+    AE_BASE_ASSERT_ENUM(priority, QueuePriority);
     priority_ = priority;
     return *this;
 }
