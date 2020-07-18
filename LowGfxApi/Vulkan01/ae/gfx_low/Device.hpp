@@ -30,14 +30,24 @@ public:
     ~Device();
     //@}
 
-    /// @name Device の所属するシステム
+    /// @name プロパティ
     //@{
+    ///  コンストラクタで渡した System オブジェクト。
     gfx_low::System& System() const { return system_; }
+
+    /// コンストラクタで渡した PhysicalDeviceIndex。
+    int PhysicalDeviceIndex() const { return physicalDeviceIndex_; }
+    //@}
+
+    /// @name 内部処理用API
+    //@{
+    ::vk::Device& InternalInstance() { return device_; }
     //@}
 
 private:
     gfx_low::System& system_;
     ::vk::Device device_;
+    int physicalDeviceIndex_;
     ::ae::base::RuntimeArray<Queue*> queues_;
 
 };

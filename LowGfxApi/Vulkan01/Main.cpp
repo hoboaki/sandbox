@@ -5,6 +5,7 @@
 #include <ae/gfx_low/Device.hpp>
 #include <ae/gfx_low/DeviceCreateInfo.hpp>
 #include <ae/gfx_low/QueueCreateInfo.hpp>
+#include <ae/gfx_low/SwapchainCreateInfo.hpp>
 #include <ae/gfx_low/SwapchainMaster.hpp>
 #include <ae/gfx_low/SwapchainMasterCreateInfo.hpp>
 #include <ae/gfx_low/System.hpp>
@@ -52,6 +53,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
         new ::ae::gfx_low::SwapchainMaster(
             ::ae::gfx_low::SwapchainMasterCreateInfo().SetDevice(
                 gfxLowDevice.get())));
+    auto swapchain = swapchainMaster->CreateSwapchain(ae::gfx_low::SwapchainCreateInfo());
 
     return 0;
 #endif

@@ -26,6 +26,12 @@ public:
     }
     //@}
 
+    /// @name 作成可能な Swapchain の最大作成数（設定可能な値：1以上、初期値：1）
+    //@{
+    int SwapchainCountMax() const { return swapchainCountMax_; }
+    SwapchainMasterCreateInfo& SetSwapchainCountMax(int count);
+    //@}
+
     /// @name 実装ライブラリ固有の拡張情報（初期値：nullptr）
     //@{
     void* ExtInfoPtr() { return extInfoPtr_; }
@@ -55,6 +61,7 @@ public:
 private:
     ::ae::base::Pointer<gfx_low::Device> device_;
     void* extInfoPtr_;
+    int swapchainCountMax_ = 1;
 #if defined(AE_BASE_OS_WINDOWS)
     HINSTANCE hinstance_ = nullptr;
     HWND hwnd_ = nullptr;

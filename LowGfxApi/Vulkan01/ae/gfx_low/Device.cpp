@@ -20,6 +20,7 @@ namespace gfx_low {
 Device::Device(const DeviceCreateInfo& createInfo)
 : system_(::ae::base::PtrToRef(createInfo.System()))
 , device_()
+, physicalDeviceIndex_(createInfo.PhysicalDeviceIndex())
 , queues_(createInfo.QueueCreateInfoCount(),
       ::ae::base::PtrToRef(createInfo.System()).InternalObjectAllocator()) {
     const auto physicalDeviceIndex = createInfo.PhysicalDeviceIndex();
