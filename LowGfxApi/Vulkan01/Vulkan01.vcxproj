@@ -216,6 +216,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ae\gfx_low\SwapchainMaster.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\SwapchainMasterCreateInfo.hpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="ae\gfx_low\System.hpp" />
     <ClInclude Include="ae\gfx_low\SystemCreateInfo.hpp">
       <SubType>
@@ -278,6 +286,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="ae\gfx_low\QueueCreateInfo.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ae\gfx_low\SwapchainMaster.cpp">
       <SubType>
       </SubType>
     </ClCompile>

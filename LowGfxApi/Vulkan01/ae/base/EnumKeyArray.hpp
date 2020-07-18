@@ -1,6 +1,8 @@
 // 文字コード：UTF-8
 #pragma once
 
+#include <ae/base/RuntimeAssert.hpp>
+
 //------------------------------------------------------------------------------
 namespace ae {
 namespace base {

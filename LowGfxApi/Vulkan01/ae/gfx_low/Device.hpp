@@ -30,8 +30,13 @@ public:
     ~Device();
     //@}
 
+    /// @name Device の所属するシステム
+    //@{
+    gfx_low::System& System() const { return system_; }
+    //@}
+
 private:
-    System& system_;
+    gfx_low::System& system_;
     ::vk::Device device_;
     ::ae::base::RuntimeArray<Queue*> queues_;
 

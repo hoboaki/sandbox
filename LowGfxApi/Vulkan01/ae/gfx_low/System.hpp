@@ -5,6 +5,7 @@
 #include <ae/base/IAllocator.hpp>
 #include <ae/base/Noncopyable.hpp>
 #include <ae/base/Pointer.hpp>
+#include <ae/gfx_low/QueueType.hpp>
 #include <ae/gfx_low/SdkHeader.hpp>
 
 namespace ae {
@@ -47,6 +48,8 @@ public:
 
     /// @name 内部処理用
     //@{
+    ::vk::Instance& InternalInstance() { return instance_; }
+
     ::ae::base::IAllocator& InternalObjectAllocator() const {
         return objectAllocator_;
     }
