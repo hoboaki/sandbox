@@ -5,6 +5,7 @@
 #include <ae/base/ArrayLength.hpp>
 #include <ae/base/IAllocator.hpp>
 #include <ae/base/PtrToRef.hpp>
+#include <ae/base/RuntimeArray.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
 #include <ae/gfx_low/SystemCreateInfo.hpp>
@@ -52,31 +53,31 @@ System::System(const SystemCreateInfo& createInfo)
     char const* const instanceValidationLayers[] = {
         "VK_LAYER_KHRONOS_validation"};
     uint32_t instanceLayerCount = 0;
-    vk::Bool32 validation_found = VK_FALSE;
+    vk::Bool32 validationFound = VK_FALSE;
     if (createInfo.DebugLevel() != SystemDebugLevel::NoDebug) {
         auto result = vk::enumerateInstanceLayerProperties(
             &instanceLayerCount, static_cast<vk::LayerProperties*>(nullptr));
         AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
         if (0 < instanceLayerCount) {
-            std::unique_ptr<vk::LayerProperties[]> instance_layers(
-                new vk::LayerProperties[instanceLayerCount]);
+            base::RuntimeArray<::vk::LayerProperties> instanceLayers(
+                instanceLayerCount, &tempWorkAllocator_);
             result = vk::enumerateInstanceLayerProperties(
-                &instanceLayerCount, instance_layers.get());
+                &instanceLayerCount, instanceLayers.head());
             AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
-            validation_found =
+            validationFound =
                 fCheckLayers(AE_BASE_ARRAY_LENGTH(instanceValidationLayers),
                     instanceValidationLayers, instanceLayerCount,
-                    instance_layers.get());
-            if (validation_found) {
+                    instanceLayers.head());
+            if (validationFound) {
                 enabledLayerCount_ =
                     AE_BASE_ARRAY_LENGTH(instanceValidationLayers);
                 enabledLayers_[0] = "VK_LAYER_KHRONOS_validation";
             }
         }
 
-        if (!validation_found) {
+        if (!validationFound) {
             AE_BASE_ASSERT_NOT_REACHED_MSG(
                 "vkEnumerateInstanceLayerProperties failed to find required "
                 "validation layer.\n\n"
@@ -97,29 +98,29 @@ System::System(const SystemCreateInfo& createInfo)
     AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
     if (0 < instanceExtensionCount) {
-        std::unique_ptr<vk::ExtensionProperties[]> instance_extensions(
-            new vk::ExtensionProperties[instanceExtensionCount]);
+        base::RuntimeArray<::vk::ExtensionProperties> instanceExtensions(
+            instanceExtensionCount, &tempWorkAllocator_);
         result = vk::enumerateInstanceExtensionProperties(
-            nullptr, &instanceExtensionCount, instance_extensions.get());
+            nullptr, &instanceExtensionCount, instanceExtensions.head());
         AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
         for (uint32_t i = 0; i < instanceExtensionCount; i++) {
             if (!std::strcmp(VK_KHR_SURFACE_EXTENSION_NAME,
-                    instance_extensions[i].extensionName)) {
+                    instanceExtensions[i].extensionName)) {
                 surfaceExtFound = 1;
                 extensionNames_[enabledExtensionCount_++] =
                     VK_KHR_SURFACE_EXTENSION_NAME;
             }
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
             if (!std::strcmp(VK_KHR_WIN32_SURFACE_EXTENSION_NAME,
-                    instance_extensions[i].extensionName)) {
+                    instanceExtensions[i].extensionName)) {
                 platformSurfaceExtFound = 1;
                 extensionNames_[enabledExtensionCount_++] =
                     VK_KHR_WIN32_SURFACE_EXTENSION_NAME;
             }
 #elif defined(VK_USE_PLATFORM_METAL_EXT)
             if (!std::strcmp(VK_EXT_METAL_SURFACE_EXTENSION_NAME,
-                    instance_extensions[i].extensionName)) {
+                    instanceExtensions[i].extensionName)) {
                 platformSurfaceExtFound = 1;
                 extensionNames_[enabledExtensionCount_++] =
                     VK_EXT_METAL_SURFACE_EXTENSION_NAME;

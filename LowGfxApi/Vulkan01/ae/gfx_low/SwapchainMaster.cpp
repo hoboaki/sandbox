@@ -5,6 +5,7 @@
 #include <ae/base/ArrayLength.hpp>
 #include <ae/base/Display.hpp>
 #include <ae/base/PtrToRef.hpp>
+#include <ae/base/RuntimeArray.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/gfx_low/Device.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
@@ -115,10 +116,10 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
         surface_, &formatCount, static_cast<vk::SurfaceFormatKHR*>(nullptr));
     AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
-    std::unique_ptr<vk::SurfaceFormatKHR[]> surfFormats(
-        new vk::SurfaceFormatKHR[formatCount]);
+    base::RuntimeArray<::vk::SurfaceFormatKHR> surfFormats(
+        int(formatCount), &device_.System().InternalTempWorkAllocator());
     result = physicalDevice.getSurfaceFormatsKHR(
-        surface_, &formatCount, surfFormats.get());
+         surface_, &formatCount, surfFormats.head());
     AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
     // If the format list includes just one entry of VK_FORMAT_UNDEFINED,
@@ -143,10 +144,10 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
         surface_, &presentModeCount, static_cast<vk::PresentModeKHR*>(nullptr));
     AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
-    std::unique_ptr<vk::PresentModeKHR[]> presentModes(
-        new vk::PresentModeKHR[presentModeCount]);
+    base::RuntimeArray<::vk::PresentModeKHR> presentModes(
+        int(presentModeCount), &device_.System().InternalTempWorkAllocator());
     result = physicalDevice.getSurfacePresentModesKHR(
-        surface_, &presentModeCount, presentModes.get());
+        surface_, &presentModeCount, presentModes.head());
     AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
     vk::Extent2D swapchainExtent;
@@ -201,7 +202,7 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
 
     ::vk::PresentModeKHR presentMode = vk::PresentModeKHR::eFifo;
     if (presentMode != swapchainPresentMode) {
-        for (size_t i = 0; i < presentModeCount; ++i) {
+        for (uint32_t i = 0; i < presentModeCount; ++i) {
             if (presentModes[i] == presentMode) {
                 swapchainPresentMode = presentMode;
                 break;

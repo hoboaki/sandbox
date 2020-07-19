@@ -106,6 +106,18 @@ public:
     /// 配列長。
     int count() const { return count_; }
 
+    /// 0番目の要素のポインタ。 
+    ValueType* head() { 
+        AE_BASE_ASSERT_LESS(0, count_);
+        return ptr_;
+    }
+
+    /// 0番目の要素のポインタ。
+    const ValueType* head() const {
+        AE_BASE_ASSERT_LESS(0, count_);
+        return ptr_;
+    }
+
     /// 指定番目の要素にアクセス。
     ValueType& at(const int index) {
         if (count_ <= index) {

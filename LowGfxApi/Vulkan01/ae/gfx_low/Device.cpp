@@ -107,15 +107,16 @@ Device::Device(const DeviceCreateInfo& createInfo)
         AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
         if (0 < deviceExtensionCount) {
-            std::unique_ptr<vk::ExtensionProperties[]> device_extensions(
-                new vk::ExtensionProperties[deviceExtensionCount]);
+            base::RuntimeArray<::vk::ExtensionProperties> deviceExtensions(
+                int(deviceExtensionCount),
+                &system_.InternalTempWorkAllocator());
             result = physicalDevice.enumerateDeviceExtensionProperties(
-                nullptr, &deviceExtensionCount, device_extensions.get());
+                nullptr, &deviceExtensionCount, deviceExtensions.head());
             AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
             for (uint32_t i = 0; i < deviceExtensionCount; i++) {
                 if (!std::strcmp(VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-                        device_extensions[i].extensionName)) {
+                        deviceExtensions[i].extensionName)) {
                     swapchainExtFound = 1;
                     extensionNames[enabledExtensionCount++] =
                         VK_KHR_SWAPCHAIN_EXTENSION_NAME;
