@@ -48,7 +48,7 @@ SwapchainMaster::SwapchainMaster(const SwapchainMasterCreateInfo& createInfo)
 //------------------------------------------------------------------------------
 SwapchainMaster::~SwapchainMaster() {
     // 逆順に破棄
-    for (int i = entities_.count() - 1; i <= 0; --i) {
+    for (int i = entities_.count() - 1; 0 <= i; --i) {
         auto& entity = entities_[i];
         if (entity.swapchainMaster.isValid()) {
             DestroySwapchain(SwapchainHandle::InternalCreate(&entity));

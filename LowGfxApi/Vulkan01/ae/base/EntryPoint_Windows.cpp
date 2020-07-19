@@ -1,6 +1,7 @@
 // 文字コード：UTF-8
 #include <ae/base/EntryPoint.hpp>
 
+#if 0
 #include <ae/base/Application.hpp>
 #include <ae/base/Argument.hpp>
 #include <ae/base/Config.hpp>
@@ -174,9 +175,6 @@ int tWinMainIN(
 } // namespace
 
 //------------------------------------------------------------------------------
-extern int WINAPI DemoWinMain(
-    HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow);
-
 int WINAPI WinMain(
     HINSTANCE aInstance,
     HINSTANCE aPrevInstance,
@@ -184,9 +182,6 @@ int WINAPI WinMain(
     int aCmdShow
     )
 {
-#if 0
-    return DemoWinMain(aInstance, aPrevInstance, aCmdLine, aCmdShow);
-#else
     // 実行ファイルのパス
     GetModuleFileNameA(aInstance, tExeFilePath, tExeFilePathLength);
     tSetupExeInfo();
@@ -209,7 +204,6 @@ int WINAPI WinMain(
 
     // 実行
     return tWinMainIN(aInstance, aCmdShow);
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -251,5 +245,5 @@ int main(
     return tWinMainIN((HINSTANCE)GetModuleHandle(NULL), SW_SHOWNORMAL);
 }
 #endif
-
+#endif
 // EOF
