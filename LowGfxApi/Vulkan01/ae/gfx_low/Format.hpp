@@ -36,12 +36,13 @@ enum class Format {
     R16G16Sint,
     R16G16Snorm,
 
+    R11G11B10Ufloat,
+
     R8G8B8A8Uint,
     R8G8B8A8Unorm,
     R8G8B8A8UnormSrgb,
     R10G10B10A2Unorm,
     R10G10B10A2Uint,
-    R11G11B10Ufloat,
     R16G16B16A16Sfloat,
     R16G16B16A16Sint,
     R16G16B16A16Snorm,
