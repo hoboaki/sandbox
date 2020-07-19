@@ -37,7 +37,6 @@ enum class Format {
     R16G16Snorm,
 
     R8G8B8A8Uint,
-    R8G8B8A8UintSrgb,
     R8G8B8A8Unorm,
     R8G8B8A8UnormSrgb,
     R10G10B10A2Unorm,
