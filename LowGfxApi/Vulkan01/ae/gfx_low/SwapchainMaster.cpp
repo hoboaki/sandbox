@@ -7,6 +7,7 @@
 #include <ae/base/PtrToRef.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/gfx_low/Device.hpp>
+#include <ae/gfx_low/PhysicalDeviceInfo.hpp>
 #include <ae/gfx_low/SwapchainCreateInfo.hpp>
 #include <ae/gfx_low/SwapchainEntity.hpp>
 #include <ae/gfx_low/SwapchainMasterCreateInfo.hpp>
@@ -45,6 +46,20 @@ SwapchainMaster::SwapchainMaster(const SwapchainMasterCreateInfo& createInfo)
         AE_BASE_ASSERT(result == vk::Result::eSuccess);
     }
 #endif
+
+    // PhysicalDevice の SurfacePresent 対応確認
+    {
+        auto pd = device_.System().InternalPhysicalDevice(device_.PhysicalDeviceIndex());
+        uint32_t queueFamilyCount = 0;
+        pd.getQueueFamilyProperties(
+            &queueFamilyCount, static_cast<::vk::QueueFamilyProperties*>(nullptr));
+        AE_BASE_ASSERT_LESS_EQUALS(1, queueFamilyCount);
+        ::vk::Bool32 isSupported = false;
+        for (uint32_t i = 0; i < queueFamilyCount && isSupported == VK_FALSE; ++i) {
+            pd.getSurfaceSupportKHR(i, surface_, &isSupported);
+        }
+        AE_BASE_ASSERT(isSupported == VK_TRUE);
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -257,9 +272,7 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
             .setCompositeAlpha(compositeAlpha)
             .setPresentMode(swapchainPresentMode)
             .setClipped(true)
-            .setOldSwapchain(oldSwapchain.IsValid()
-                                 ? oldSwapchain.InternalEntity().swapchain
-                                 : ::vk::SwapchainKHR());
+            .setOldSwapchain(oldSwapchainInstance);
 
     result = device_.InternalInstance().createSwapchainKHR(
         &swapchain_ci, nullptr, &entity->swapchain);
