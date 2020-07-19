@@ -17,13 +17,13 @@ class Application;
 /// @details アプリケーションはこれを実装してアプリケーションを開始してください。
 /// @code
 /// // 例
-/// int xmain( const ::ae::base::Application& )
+/// int aemain( const ::ae::base::Application& )
 /// {
 ///     // 何もせずにアプリケーションを終了するコード。
 ///     return 0;
 /// }
 /// @endcode
-extern int xmain(::ae::base::Application& aApp);
+extern int aemain(::ae::base::Application& aApp);
 
 //@}
 #endif

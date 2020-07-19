@@ -3,7 +3,7 @@
 #else
 #define AE_BASE_INCLUDED_HID_HPP
 
-#include <ae/base/NonCopyable.hpp>
+#include <ae/base/Noncopyable.hpp>
 #include <ae/base/Os.hpp>
 
 #if defined(AE_BASE_OS_WINDOWS)
@@ -29,7 +29,7 @@ namespace base {
 /// @addtogroup AeBase-Hid
 //@{
 /// @brief Hid(Human Interface Device)にアクセスするクラス。
-class Hid : public NonCopyable
+class Hid : public Noncopyable<Hid>
 {
 public:
     /// @name コンストラクタとデストラクタ

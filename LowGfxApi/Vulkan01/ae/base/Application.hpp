@@ -34,7 +34,7 @@ namespace base {
     /// @details
     /// このクラスのインスタンスはフレームワークによって生成されます。@n
 /// xmain 関数が呼ばれた時点でこのクラスは生成されているため Instance() を使ってアクセスできます。@n
-class Application : public ::ae::base::NonCopyable
+class Application : ::ae::base::Noncopyable<Application>
 {
 public:
     /// インスタンスにアクセス。

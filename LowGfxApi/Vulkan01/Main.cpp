@@ -1,5 +1,10 @@
 // 文字コード：UTF-8
+#include <ae/base/AppEvent.hpp>
+#include <ae/base/Application.hpp>
 #include <ae/base/Console.hpp>
+#include <ae/base/Display.hpp>
+#include <ae/base/DisplayContext.hpp>
+#include <ae/base/EntryPoint.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/base/SdkHeader.hpp>
 #include <ae/gfx_low/Device.hpp>
@@ -16,11 +21,17 @@ extern int WINAPI DemoWinMain(
     HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow);
 
 //------------------------------------------------------------------------------
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
-    int nCmdShow) {
-#if 0
-    return DemoWinMain(hInstance, hPrevInstance, pCmdLine, nCmdShow);
-#else
+int aemain(::ae::base::Application& app) {
+    // コンソール出力
+    AE_BASE_COUT_LINE_WITH_TIME("Adel runtime start.");
+
+    // ディスプレイの作成
+    ::ae::base::Display display =
+        ::ae::base::Display(::ae::base::DisplayContext());
+
+    // ディスプレイの表示
+    display.show();
+
     // グラフィックスシステムインスタンス作成
     ::std::unique_ptr<::ae::gfx_low::System> gfxLowSystem(
         new ::ae::gfx_low::System(
@@ -49,13 +60,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
     }
 
     // Swapchain の作成
-    ::std::unique_ptr<::ae::gfx_low::SwapchainMaster> swapchainMaster(
-        new ::ae::gfx_low::SwapchainMaster(
-            ::ae::gfx_low::SwapchainMasterCreateInfo().SetDevice(
-                gfxLowDevice.get())));
-    auto swapchain = swapchainMaster->CreateSwapchain(ae::gfx_low::SwapchainCreateInfo());
-
-    return 0;
+    ::std::unique_ptr<::ae::gfx_low::SwapchainMaster> swapchainMaster;
+    {
+        auto createInfo = ::ae::gfx_low::SwapchainMasterCreateInfo()
+            .SetDevice(gfxLowDevice.get());
+#if defined(AE_BASE_OS_WINDOWS)
+        createInfo.SetWin32Props(
+            (HINSTANCE)GetModuleHandle(0), GetDesktopWindow());
 #endif
+        swapchainMaster.reset(new ::ae::gfx_low::SwapchainMaster(createInfo));
+    }
+    auto swapchain =
+        swapchainMaster->CreateSwapchain(ae::gfx_low::SwapchainCreateInfo());
+
+    // メインループ
+    while (app.receiveEvent() != ::ae::base::AppEvent::Quit) {
+        // 更新以外は何もしない
+        if (app.lastEvent() != ::ae::base::AppEvent::Update) {
+            continue;
+        }
+
+        // ディスプレイが閉じられたら終了する
+        if (display.isClosed()) {
+            app.quit();
+        }
+    }
+
+    // 終了
+    return 0;
 }
 // EOF
