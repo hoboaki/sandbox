@@ -35,9 +35,11 @@ public:
     static LRESULT CALLBACK WindowProcess(HWND, UINT, WPARAM, LPARAM);
 
     //============================================================
-    HWND window;
+    HINSTANCE hinstance;
+    HWND hwindow;
     WNDCLASSEX windowClass;
     MSG  message;
+    POINT minSize;
     Placement< Screen > mainScreen;
     Pointer< Hid > hidPtr;
     Bool32 isClosed;

@@ -1,7 +1,7 @@
 // 文字コード：UTF-8
 #include <ae/base/EntryPoint.hpp>
 
-#if 0
+// includes
 #include <ae/base/Application.hpp>
 #include <ae/base/Argument.hpp>
 #include <ae/base/Config.hpp>
@@ -169,7 +169,7 @@ int tWinMainIN(
     ::ae::base::Application app(arg);
 
     // 実行
-    return ::aemain(app);
+    return ::aemain(&app);
 }
 
 } // namespace
@@ -244,6 +244,5 @@ int main(
     // 実行
     return tWinMainIN((HINSTANCE)GetModuleHandle(NULL), SW_SHOWNORMAL);
 }
-#endif
 #endif
 // EOF

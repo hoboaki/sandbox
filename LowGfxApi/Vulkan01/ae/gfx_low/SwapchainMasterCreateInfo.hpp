@@ -5,6 +5,11 @@
 #include <ae/base/SdkHeader.hpp>
 
 namespace ae {
+namespace base {
+class Display;
+}
+}
+namespace ae {
 namespace gfx_low {
 class Device;
 }
@@ -37,19 +42,15 @@ public:
     void* ExtInfoPtr() { return extInfoPtr_; }
     SwapchainMasterCreateInfo& SetExtInfoPtr(void* ptr) { extInfoPtr_ = ptr; }
     //@}
-
-#if defined(AE_BASE_OS_WINDOWS)
-    /// @name Windows 専用設定
+    
+    /// @name 対象 Surface を持つDisplay（設定必須、初期値：nullptr）
     //@{
-    HINSTANCE Win32Hinstance() const { return hinstance_; }
-    HWND Win32Hwnd() const { return hwnd_; }
-    SwapchainMasterCreateInfo& SetWin32Props(HINSTANCE hinstance, HWND hwnd) {
-        hinstance_ = hinstance;
-        hwnd_ = hwnd;
+    base::Display* Display() const { return display_.get(); }
+    SwapchainMasterCreateInfo& SetDisplay(base::Display* display) {
+        display_.reset(display);
         return *this;
     }
     //@}
-#endif
 
     // メモ：
     // 将来的に、Swapchain が確保しうる最大バッファ情報などをここに入れる。
@@ -61,11 +62,8 @@ public:
 private:
     ::ae::base::Pointer<gfx_low::Device> device_;
     void* extInfoPtr_;
+    ::ae::base::Pointer<base::Display> display_;
     int swapchainCountMax_ = 1;
-#if defined(AE_BASE_OS_WINDOWS)
-    HINSTANCE hinstance_ = nullptr;
-    HWND hwnd_ = nullptr;
-#endif
 };
 
 }  // namespace gfx_low

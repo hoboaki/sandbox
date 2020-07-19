@@ -159,8 +159,8 @@ Screen& Display::mainScreen()
 void Display::show()
 {
     mExt.isClosed = false;
-    ShowWindow(mExt.window, SW_SHOWNORMAL);
-    UpdateWindow(mExt.window);
+    ShowWindow(mExt.hwindow, SW_SHOWNORMAL);
+    UpdateWindow(mExt.hwindow);
 }
 
 //------------------------------------------------------------------------------
@@ -171,19 +171,19 @@ bool Display::isClosed()const
 
 //------------------------------------------------------------------------------
 Display_Ext::Display_Ext(const DisplayContext& aContext)
-: window()
+: hinstance((HINSTANCE)GetModuleHandle(0))
+, hwindow()
 , windowClass()
 , message()
+, minSize({0, 0})
 , mainScreen()
 , hidPtr()
 , isClosed(true)
 , keyboardUpdateData()
 , mouseUpdateData()
 {
-    // インスタンスの取得
-    HINSTANCE hinstance = (HINSTANCE)GetModuleHandle(0);
-
     // Windowクラスのセットアップ
+    const char* className = "Adel Engine Application";
     windowClass.cbSize = sizeof(windowClass);
     windowClass.style = CS_HREDRAW | CS_VREDRAW;
     windowClass.lpfnWndProc = WindowProcess;
@@ -194,7 +194,7 @@ Display_Ext::Display_Ext(const DisplayContext& aContext)
     windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
     windowClass.lpszMenuName = NULL;
-    windowClass.lpszClassName = "Adel Engine Application";
+    windowClass.lpszClassName = className;
     windowClass.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
     RegisterClassEx(&windowClass);
 
@@ -209,9 +209,10 @@ Display_Ext::Display_Ext(const DisplayContext& aContext)
         FALSE
         );
 
-// ウィンドウの作成
-    window = CreateWindow(
-        "Adel Engine Application",
+    // ウィンドウの作成
+    tCurrentDisplay.set(*this);
+    hwindow = CreateWindow(
+        className,
         "Window Title",
         style,
         aContext.locationX(),
@@ -223,8 +224,12 @@ Display_Ext::Display_Ext(const DisplayContext& aContext)
         hinstance,
         0 // lpParam
         );
+    tCurrentDisplay.unset(*this);
 
-// メインスクリーンの作成
+    minSize.x = GetSystemMetrics(SM_CXMINTRACK);
+    minSize.y = GetSystemMetrics(SM_CYMINTRACK) + 1;
+
+    // メインスクリーンの作成
     mainScreen.init(Ref(*this), aContext.width(), aContext.height());
 }
 
@@ -241,7 +246,7 @@ void Display_Ext::pollEvent(Application&)
     tCurrentDisplay.set(*this);
 
     // メッセージ解析
-    while (PeekMessage(&message, window, 0, 0, PM_REMOVE) != 0) {
+    while (PeekMessage(&message, hwindow, 0, 0, PM_REMOVE) != 0) {
         TranslateMessage(&message);
         DispatchMessage(&message);
     }
@@ -276,6 +281,10 @@ LRESULT Display_Ext::WindowProcess(HWND aHWND, UINT aMsg, WPARAM aWParam, LPARAM
 LRESULT Display_Ext::windowProcess(HWND aHWND, UINT aMsg, WPARAM aWParam, LPARAM aLParam)
 {
     switch (aMsg) {
+        case WM_GETMINMAXINFO:  // set window's minimum size
+            ((MINMAXINFO*)aLParam)->ptMinTrackSize = minSize;
+            return 0;
+
         case WM_SYSKEYDOWN:
             break;
 

@@ -3,6 +3,7 @@
 
 // includes
 #include <ae/base/ArrayLength.hpp>
+#include <ae/base/Display.hpp>
 #include <ae/base/PtrToRef.hpp>
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/gfx_low/Device.hpp>
@@ -24,10 +25,11 @@ SwapchainMaster::SwapchainMaster(const SwapchainMasterCreateInfo& createInfo)
     // surface 作成
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
     {
+        auto& display = base::PtrToRef(createInfo.Display());
         auto const surfaceCreateInfo =
             ::vk::Win32SurfaceCreateInfoKHR()
-                .setHinstance(createInfo.Win32Hinstance())
-                .setHwnd(createInfo.Win32Hwnd());
+                .setHinstance(display.ext_().hinstance)
+                .setHwnd(display.ext_().hwindow);
 
         auto result = device_.System().InternalInstance().createWin32SurfaceKHR(
             &surfaceCreateInfo, nullptr, &surface_);

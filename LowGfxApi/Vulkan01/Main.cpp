@@ -20,7 +20,7 @@ extern int WINAPI DemoWinMain(
 
 //------------------------------------------------------------------------------
 int aemain(::ae::base::Application* app) {
-#if 1
+#if 0
     return DemoWinMain((HINSTANCE)GetModuleHandle(0), nullptr, nullptr, 0);
 #else
     // コンソール出力

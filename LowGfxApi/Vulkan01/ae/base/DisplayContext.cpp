@@ -17,8 +17,8 @@ namespace {
 
 enum
 {
-    tDefaultWidth = 960,
-    tDefaultHeight = 640
+    tDefaultWidth = 1280,
+    tDefaultHeight = 720
 };
 
 }
