@@ -59,6 +59,7 @@ int aemain(::ae::base::Application* app) {
                 .SetSystem(gfxLowSystem.get())
                 .SetQueueCreateInfos(queueCount, queueCreateInfos)));
     }
+    auto& queue = gfxLowDevice->Queue(0);
 
     // Swapchain の作成
     ::std::unique_ptr<::ae::gfx_low::SwapchainMaster> swapchainMaster;
