@@ -27,6 +27,7 @@ namespace gfx_low {
 /// @details
 /// スワップチェインが使用するメモリ管理や、作り直し機能を提供する。
 /// Surface の概念があるプラットフォームでは Surface の生成・破棄も行う。
+/// ::ae::base::Screen １つにつき１つの SwapchainMaster を作る。
 class SwapchainMaster {
 public:
     /// @name コンストラクタとデストラクタ
