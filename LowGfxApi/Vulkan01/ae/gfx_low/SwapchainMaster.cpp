@@ -102,7 +102,7 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
             }
         }
     }
-    *entity = Swapchain();
+    *entity = SwapchainEntity();
 
     // Get the list of VkFormat's that are supported:
     uint32_t formatCount;
@@ -297,7 +297,7 @@ void SwapchainMaster::DestroySwapchain(const SwapchainHandle& swapchain) {
 
     // 破棄
     DestroySwapchainInstance(entity.InternalInstance());
-    entity = Swapchain();
+    entity = SwapchainEntity();
 }
 
 //------------------------------------------------------------------------------

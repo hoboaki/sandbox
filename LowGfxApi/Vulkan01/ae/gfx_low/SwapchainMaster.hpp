@@ -3,6 +3,7 @@
 
 #include <ae/base/RuntimeArray.hpp>
 #include <ae/gfx_low/SdkHeader.hpp>
+#include <ae/gfx_low/Swapchain.hpp>
 #include <ae/gfx_low/SwapchainHandle.hpp>
 
 namespace ae {
@@ -56,13 +57,18 @@ public:
     //@}
 
 private:
+    class SwapchainEntity : public Swapchain {
+    public:
+        SwapchainEntity() {}
+    };
+
     uint32_t AcquireUniqueId();
     void DestroySwapchainInstance(::vk::SwapchainKHR instance);
 
     gfx_low::Device& device_;
     base::Screen& screen_;
     ::vk::SurfaceKHR surface_;
-    ::ae::base::RuntimeArray<Swapchain> swapchains_;
+    ::ae::base::RuntimeArray<SwapchainEntity> swapchains_;
     uint32_t lastAcquireUniqueId_ = 0;
 };
 

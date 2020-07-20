@@ -55,6 +55,10 @@ public:
     uint32_t InternalUniqueId() const { return uniqueId_;  }
     //@}
 
+protected:
+    /// ユーザーが誤って生成する事故を防ぐための protected-ctor。 
+    Swapchain() {}
+
 private:
     ::ae::base::Pointer<SwapchainMaster> swapchainMaster_;
     ::vk::SwapchainKHR swapchain_;
