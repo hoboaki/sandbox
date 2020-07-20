@@ -8,6 +8,7 @@
 #include <ae/base/RuntimeAssert.hpp>
 #include <ae/gfx_low/DeviceCreateInfo.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
+#include <ae/gfx_low/Queue.hpp>
 #include <ae/gfx_low/QueueCreateInfo.hpp>
 #include <ae/gfx_low/System.hpp>
 #include <array>
@@ -22,7 +23,7 @@ Device::Device(const DeviceCreateInfo& createInfo)
 , device_()
 , physicalDeviceIndex_(createInfo.PhysicalDeviceIndex())
 , queues_(createInfo.QueueCreateInfoCount(),
-      ::ae::base::PtrToRef(createInfo.System()).InternalObjectAllocator()) {
+      &::ae::base::PtrToRef(createInfo.System()).InternalObjectAllocator()) {
     const auto physicalDeviceIndex = createInfo.PhysicalDeviceIndex();
     AE_BASE_ASSERT_MIN_TERM(
         physicalDeviceIndex, 0, system_.PhysicalDeviceCount());
@@ -66,8 +67,7 @@ Device::Device(const DeviceCreateInfo& createInfo)
     }
 
     // 各 QueueFamily ごとの Priority 配列を作成
-    ::ae::base::EnumKeyArray<QueueType,
-        ::ae::base::RuntimeArray<float>>
+    ::ae::base::EnumKeyArray<QueueType, ::ae::base::RuntimeArray<float>>
         queuePriorityTable;
     for (int queueType = 0; queueType < int(QueueType::TERM); ++queueType) {
         const auto queueCount = queueCountTable[queueType];
@@ -165,10 +165,18 @@ Device::Device(const DeviceCreateInfo& createInfo)
             physicalDevice.createDevice(&deviceInfo, nullptr, &device_);
         AE_BASE_ASSERT(result == vk::Result::eSuccess);
     }
+
+    // Queue オブジェクト作成
+    for (int i = 0; i < queueCreateCount; ++i) {
+        queues_.add(
+            this, device_.getQueue(deviceQueueCreateInfos[i].queueFamilyIndex,
+                      indexInQueueTypeTable[i]));
+    }
 }
 
 //------------------------------------------------------------------------------
 Device::~Device() {
+    queues_.clear();
     device_.destroy(nullptr);
     device_ = ::vk::Device();
 }

@@ -15,7 +15,7 @@ namespace base {
 //@{
 /// @brief 実行時に最大要素数が決定するAutoPtr配列。
 template< typename T >
-class RuntimeAutoArray : public ::ae::base::NonCopyable
+class RuntimeAutoArray : ::ae::base::Noncopyable<RuntimeAutoArray<T>>
 {
 public:
     /// @name typedef
@@ -31,8 +31,10 @@ public:
     /// @param aAllocator 配列データを確保する際に使用するアロケータ。
     /// @details 
     /// 配列長が0の場合、アロケートは走りません。
-    RuntimeAutoArray(int aCountMax, IAllocator& aAllocator = IAllocator::Default())
-        : mAllocator(aAllocator)
+    RuntimeAutoArray(
+        int aCountMax, IAllocator* aAllocator = &IAllocator::Default()
+        )
+        : mAllocator(PtrToRef(aAllocator))
         , mCountMax(aCountMax)
         , mCount(0)
         , mPtr(0)
@@ -42,6 +44,11 @@ public:
             mPtr = reinterpret_cast<ValueType*>(mAllocator.alloc(sizeof(ValueType) * aCountMax));
         }
     }
+
+    /// 非推奨版。
+    RuntimeAutoArray(
+        int aCountMax, IAllocator& aAllocator = IAllocator::Default())
+    : RuntimeAutoArray(aCountMax, &aAllocator) {}
 
     /// デストラクタ。
     ~RuntimeAutoArray()

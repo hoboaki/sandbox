@@ -1,7 +1,7 @@
 // 文字コード：UTF-8
 #pragma once
 
-#include <ae/base/RuntimeArray.hpp>
+#include <ae/base/RuntimeAutoArray.hpp>
 #include <ae/gfx_low/SdkHeader.hpp>
 
 namespace ae {
@@ -48,8 +48,7 @@ private:
     gfx_low::System& system_;
     ::vk::Device device_;
     int physicalDeviceIndex_;
-    ::ae::base::RuntimeArray<Queue*> queues_;
-
+    base::RuntimeAutoArray<Queue> queues_;
 };
 
 }  // namespace gfx_low
