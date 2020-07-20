@@ -360,9 +360,6 @@
     <ClInclude Include="ae\gfx_low\SwapchainHandle.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ae\gfx_low\SwapchainEntity.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="ae\base\Application_Windows.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -400,6 +397,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="ae\gfx_low\Format.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\Queue.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ae\gfx_low\Swapchain.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

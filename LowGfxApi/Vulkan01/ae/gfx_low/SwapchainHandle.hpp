@@ -6,7 +6,8 @@
 
 namespace ae {
 namespace gfx_low {
-class SwapchainEntity;
+class Swapchain;
+class SwapchainMaster;
 }  // namespace gfx_low
 }  // namespace ae
 
@@ -14,7 +15,7 @@ class SwapchainEntity;
 namespace ae {
 namespace gfx_low {
 
-/// Swapchain にアクセスするハンドル。
+/// Swapchain を扱うハンドル。
 /// @details
 /// Swapchain 本体は SwapchainMaster が管理します。
 /// ユーザーは SwapchainMaster で生成した SwapchainHandle に対して操作を行い、
@@ -27,6 +28,9 @@ public:
     //@{
     /// 無効なハンドルを作成。
     SwapchainHandle() {}
+
+    /// 有効なハンドルを作成。
+    SwapchainHandle(Swapchain* swapchain);
     //@}
 
     /// @name ハンドルの状態
@@ -35,14 +39,19 @@ public:
     bool IsValid() const;
     //@}
 
+    /// @name アクセス演算子（IsValid() なときのみアクセス可能）
+    //@{
+    Swapchain& operator->() const;
+    //@}
+
     /// @name 内部処理用機能
     //@{
-    static SwapchainHandle InternalCreate(SwapchainEntity* entity);
-    SwapchainEntity& InternalEntity() const { return *entity_; }
+    Swapchain& InternalEntity() const { return *entity_; }
     //@}
 
 private:
-    ::ae::base::Pointer<SwapchainEntity> entity_;
+    ::ae::base::Pointer<Swapchain> entity_;
+    ::ae::base::Pointer<SwapchainMaster> entityMaster_;
 
     /// 生成時の UniqueId。IsValid() 判定で使用。
     uint32_t entityUniqueId_ = 0;

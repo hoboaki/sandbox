@@ -3,23 +3,31 @@
 
 // includes
 #include <ae/base/PtrToRef.hpp>
-#include <ae/gfx_low/SwapchainEntity.hpp>
+#include <ae/base/RuntimeAssert.hpp>
+#include <ae/gfx_low/Swapchain.hpp>
 
 //------------------------------------------------------------------------------
 namespace ae {
 namespace gfx_low {
 
 //------------------------------------------------------------------------------
+SwapchainHandle::SwapchainHandle(Swapchain* entity)
+: entity_(&base::PtrToRef(entity))
+, entityMaster_(&entity_->swapchainMaster())
+, entityUniqueId_(entity_->InternalUniqueId()) {}
+
+//------------------------------------------------------------------------------
 bool SwapchainHandle::IsValid() const {
-    return entity_.isValid() && entity_->uniqueId == entityUniqueId_;
+    return entity_.isValid() &&
+           &entity_->swapchainMaster() == entityMaster_.get() &&
+           entity_->InternalUniqueId() == entityUniqueId_;
 }
 
 //------------------------------------------------------------------------------
-SwapchainHandle SwapchainHandle::InternalCreate(SwapchainEntity* entity) {
-    SwapchainHandle result;
-    result.entity_.set(::ae::base::PtrToRef(entity));
-    result.entityUniqueId_ = entity->uniqueId;
-    return result;
+Swapchain& SwapchainHandle::operator->() const
+{
+    AE_BASE_ASSERT(IsValid());
+    return entity_.ref();
 }
 
 }  // namespace gfx_low

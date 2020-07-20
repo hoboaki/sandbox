@@ -11,7 +11,7 @@
 #include <ae/gfx_low/Device.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
 #include <ae/gfx_low/SwapchainCreateInfo.hpp>
-#include <ae/gfx_low/SwapchainEntity.hpp>
+#include <ae/gfx_low/Swapchain.hpp>
 #include <ae/gfx_low/SwapchainMasterCreateInfo.hpp>
 #include <ae/gfx_low/System.hpp>
 
@@ -24,7 +24,7 @@ SwapchainMaster::SwapchainMaster(const SwapchainMasterCreateInfo& createInfo)
 : device_(::ae::base::PtrToRef(createInfo.Device()))
 , screen_(base::PtrToRef(createInfo.Screen()))
 , surface_()
-, entities_(createInfo.SwapchainCountMax(),
+, swapchains_(createInfo.SwapchainCountMax(),
       &device_.System().InternalObjectAllocator()) {
     // surface 作成
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
@@ -67,10 +67,10 @@ SwapchainMaster::SwapchainMaster(const SwapchainMasterCreateInfo& createInfo)
 //------------------------------------------------------------------------------
 SwapchainMaster::~SwapchainMaster() {
     // 逆順に破棄
-    for (int i = entities_.count() - 1; 0 <= i; --i) {
-        auto& entity = entities_[i];
-        if (entity.swapchainMaster.isValid()) {
-            DestroySwapchain(SwapchainHandle::InternalCreate(&entity));
+    for (int i = swapchains_.count() - 1; 0 <= i; --i) {
+        auto& swapchain = swapchains_[i];
+        if (swapchain.InternalIsInitialized()) {
+            DestroySwapchain(SwapchainHandle(&swapchain));
         }
     }
     device_.System().InternalInstance().destroySurfaceKHR(surface_, nullptr);
@@ -86,26 +86,23 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
         device_.System().InternalPhysicalDevice(device_.PhysicalDeviceIndex());
 
     // 古い swapchain をメモ
-    SwapchainEntity* entity = nullptr;
+    Swapchain* entity = nullptr;
     ::vk::SwapchainKHR oldSwapchainInstance;
     if (oldSwapchain.IsValid()) {
-        oldSwapchain.InternalEntity().swapchain;
         entity = &oldSwapchain.InternalEntity();
     }
 
     // Entity を確保
     const uint32_t nextUniqueId = AcquireUniqueId();
     if (entity == nullptr) {
-        for (int entityIdx = 0; entityIdx < entities_.count(); ++entityIdx) {
-            if (entities_[entityIdx].swapchainMaster.isNull()) {
-                entity = &entities_[entityIdx];
+        for (int entityIdx = 0; entityIdx < swapchains_.count(); ++entityIdx) {
+            if (!swapchains_[entityIdx].InternalIsInitialized()) {
+                entity = &swapchains_[entityIdx];
                 break;
             }
         }
     }
-    *entity = SwapchainEntity();
-    entity->swapchainMaster.reset(this);
-    entity->uniqueId = nextUniqueId;
+    *entity = Swapchain();
 
     // Get the list of VkFormat's that are supported:
     uint32_t formatCount;
@@ -278,26 +275,29 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
             .setClipped(true)
             .setOldSwapchain(oldSwapchainInstance);
 
+    ::vk::SwapchainKHR swapchain;
     result = device_.InternalInstance().createSwapchainKHR(
-        &swapchain_ci, nullptr, &entity->swapchain);
+        &swapchain_ci, nullptr, &swapchain);
     AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
     if (oldSwapchain.IsValid()) {
         DestroySwapchainInstance(oldSwapchainInstance);
     }
 
-    return SwapchainHandle::InternalCreate(entity);
+    entity->InternalInitialize(this, swapchain, nextUniqueId);
+
+    return SwapchainHandle(entity);
 }
 
 //------------------------------------------------------------------------------
 void SwapchainMaster::DestroySwapchain(const SwapchainHandle& swapchain) {
     AE_BASE_ASSERT(swapchain.IsValid());
     auto& entity = swapchain.InternalEntity();
-    AE_BASE_ASSERT(this == entity.swapchainMaster.get());
+    AE_BASE_ASSERT(this == &entity.swapchainMaster());
 
     // 破棄
-    DestroySwapchainInstance(entity.swapchain);
-    entity = SwapchainEntity();
+    DestroySwapchainInstance(entity.InternalInstance());
+    entity = Swapchain();
 }
 
 //------------------------------------------------------------------------------
@@ -305,12 +305,12 @@ uint32_t SwapchainMaster::AcquireUniqueId() {
     uint32_t uniqueId = lastAcquireUniqueId_;
     while (true) {
         ++uniqueId;
-        if (uniqueId == SwapchainEntity::InvalidUniqueId) {
+        if (uniqueId == Swapchain::InvalidUniqueId) {
             continue;
         }
         bool isFound = false;
-        for (int i = 0; i < entities_.count(); ++i) {
-            if (entities_[i].uniqueId == uniqueId) {
+        for (int i = 0; i < swapchains_.count(); ++i) {
+            if (swapchains_[i].InternalUniqueId() == uniqueId) {
                 isFound = true;
                 break;
             }

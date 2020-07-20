@@ -14,7 +14,7 @@ namespace ae {
 namespace gfx_low {
 class Device;
 class SwapchainCreateInfo;
-class SwapchainEntity;
+class Swapchain;
 class SwapchainMasterCreateInfo;
 }  // namespace gfx_low
 }  // namespace ae
@@ -62,7 +62,7 @@ private:
     gfx_low::Device& device_;
     base::Screen& screen_;
     ::vk::SurfaceKHR surface_;
-    ::ae::base::RuntimeArray<SwapchainEntity> entities_;
+    ::ae::base::RuntimeArray<Swapchain> swapchains_;
     uint32_t lastAcquireUniqueId_ = 0;
 };
 
