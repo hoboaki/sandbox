@@ -6,7 +6,7 @@
 
 namespace ae {
 namespace base {
-class Display;
+class Screen;
 }
 }
 namespace ae {
@@ -43,11 +43,11 @@ public:
     SwapchainMasterCreateInfo& SetExtInfoPtr(void* ptr) { extInfoPtr_ = ptr; }
     //@}
     
-    /// @name 対象 Surface を持つDisplay（設定必須、初期値：nullptr）
+    /// @name 対象 Surface を持つ Screen（設定必須、初期値：nullptr）
     //@{
-    base::Display* Display() const { return display_.get(); }
-    SwapchainMasterCreateInfo& SetDisplay(base::Display* display) {
-        display_.reset(display);
+    base::Screen* Screen() const { return screen_.get(); }
+    SwapchainMasterCreateInfo& SetScreen(base::Screen* display) {
+        screen_.reset(display);
         return *this;
     }
     //@}
@@ -62,7 +62,7 @@ public:
 private:
     ::ae::base::Pointer<gfx_low::Device> device_;
     void* extInfoPtr_;
-    ::ae::base::Pointer<base::Display> display_;
+    ::ae::base::Pointer<base::Screen> screen_;
     int swapchainCountMax_ = 1;
 };
 

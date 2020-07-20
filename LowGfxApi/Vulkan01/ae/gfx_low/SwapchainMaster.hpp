@@ -6,12 +6,17 @@
 #include <ae/gfx_low/SwapchainHandle.hpp>
 
 namespace ae {
+namespace base {
+class Screen;
+}
+}  // namespace ae
+namespace ae {
 namespace gfx_low {
 class Device;
 class SwapchainCreateInfo;
 class SwapchainEntity;
 class SwapchainMasterCreateInfo;
-}
+}  // namespace gfx_low
 }  // namespace ae
 
 //------------------------------------------------------------------------------
@@ -39,7 +44,9 @@ public:
     /// @name Swapchain の作成・破棄
     //@{
     /// Swapchain を作成。
-    /// @param oldSwapchain 新規作成する Swapchain に Present 情報などを引き継ぎつつ破棄をする Swapchain。ここに渡した Swapchain オブジェクトは使えなくなる。無効なハンドルを渡した場合、引き継ぎなどは行わない。
+    /// @param oldSwapchain 新規作成する Swapchain に Present
+    /// 情報などを引き継ぎつつ破棄をする Swapchain。ここに渡した Swapchain
+    /// オブジェクトは使えなくなる。無効なハンドルを渡した場合、引き継ぎなどは行わない。
     SwapchainHandle CreateSwapchain(const SwapchainCreateInfo& createInfo,
         const SwapchainHandle& oldSwapchain = SwapchainHandle());
 
@@ -52,6 +59,7 @@ private:
     void DestroySwapchainInstance(::vk::SwapchainKHR instance);
 
     gfx_low::Device& device_;
+    base::Screen& screen_;
     ::vk::SurfaceKHR surface_;
     ::ae::base::RuntimeArray<SwapchainEntity> entities_;
     uint32_t lastAcquireUniqueId_ = 0;

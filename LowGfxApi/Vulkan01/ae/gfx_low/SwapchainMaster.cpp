@@ -7,6 +7,7 @@
 #include <ae/base/PtrToRef.hpp>
 #include <ae/base/RuntimeArray.hpp>
 #include <ae/base/RuntimeAssert.hpp>
+#include <ae/base/Screen.hpp>
 #include <ae/gfx_low/Device.hpp>
 #include <ae/gfx_low/PhysicalDeviceInfo.hpp>
 #include <ae/gfx_low/SwapchainCreateInfo.hpp>
@@ -21,17 +22,17 @@ namespace gfx_low {
 //------------------------------------------------------------------------------
 SwapchainMaster::SwapchainMaster(const SwapchainMasterCreateInfo& createInfo)
 : device_(::ae::base::PtrToRef(createInfo.Device()))
+, screen_(base::PtrToRef(createInfo.Screen()))
 , surface_()
 , entities_(createInfo.SwapchainCountMax(),
       &device_.System().InternalObjectAllocator()) {
     // surface 作成
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
     {
-        auto& display = base::PtrToRef(createInfo.Display());
         auto const surfaceCreateInfo =
             ::vk::Win32SurfaceCreateInfoKHR()
-                .setHinstance(display.ext_().hinstance)
-                .setHwnd(display.ext_().hwindow);
+                .setHinstance(screen_.display_().hinstance)
+                .setHwnd(screen_.display_().hwindow);
 
         auto result = device_.System().InternalInstance().createWin32SurfaceKHR(
             &surfaceCreateInfo, nullptr, &surface_);
@@ -83,8 +84,6 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
     // メモ
     const auto& physicalDevice =
         device_.System().InternalPhysicalDevice(device_.PhysicalDeviceIndex());
-    uint32_t width = 500;
-    uint32_t height = 500;
 
     // 古い swapchain をメモ
     SwapchainEntity* entity = nullptr;
@@ -151,18 +150,20 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
     AE_BASE_ASSERT(result == vk::Result::eSuccess);
 
     vk::Extent2D swapchainExtent;
+    swapchainExtent.width = screen_.width();
+    swapchainExtent.height = screen_.height();
     // width and height are either both -1, or both not -1.
-    if (surfCapabilities.currentExtent.width == (uint32_t)-1) {
-        // If the surface size is undefined, the size is set to
-        // the size of the images requested.
-        swapchainExtent.width = width;
-        swapchainExtent.height = height;
-    } else {
-        // If the surface size is defined, the swap chain size must match
-        swapchainExtent = surfCapabilities.currentExtent;
-        width = surfCapabilities.currentExtent.width;
-        height = surfCapabilities.currentExtent.height;
-    }
+    //if (surfCapabilities.currentExtent.width == (uint32_t)-1) {
+    //    // If the surface size is undefined, the size is set to
+    //    // the size of the images requested.
+    //    swapchainExtent.width = width;
+    //    swapchainExtent.height = height;
+    //} else {
+    //    // If the surface size is defined, the swap chain size must match
+    //    swapchainExtent = surfCapabilities.currentExtent;
+    //    width = surfCapabilities.currentExtent.width;
+    //    height = surfCapabilities.currentExtent.height;
+    //}
 
     // The FIFO present mode is guaranteed by the spec to be supported
     // and to have no tearing.  It's a great default present mode to use.

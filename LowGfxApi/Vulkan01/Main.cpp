@@ -65,7 +65,7 @@ int aemain(::ae::base::Application* app) {
     {
         auto& createInfo = ::ae::gfx_low::SwapchainMasterCreateInfo()
                                .SetDevice(gfxLowDevice.get())
-                               .SetDisplay(&display);
+                               .SetScreen(&display.mainScreen());
         swapchainMaster.reset(new ::ae::gfx_low::SwapchainMaster(createInfo));
     }
     auto swapchain =
