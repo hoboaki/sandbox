@@ -16,10 +16,13 @@ namespace gfx_low {
 
 /// スワップチェインを扱うクラス。
 /// @details
-/// スワップチェインは最終的に生成されたイメージを Screen に転送する機能を提供します。
-/// スワップチェインは Screen に転送する用のイメージバッファを複数所持することで
+/// スワップチェインは最終的に生成されたイメージを Screen
+/// に転送する機能を提供します。 スワップチェインは Screen
+/// に転送する用のイメージバッファを複数所持することで
 /// アプリケーションは画面に表示されていないバッファに対して描画することが可能となります。
-/// 本オブジェクトの生成は SwapchainMaster::createSwapchain() で行い、SwapchainHandle を経由でアクセスします。
+///
+/// 本オブジェクトの生成は SwapchainMaster::createSwapchain()
+/// で行い、SwapchainHandle を経由でアクセスします。
 class Swapchain {
 public:
     /// @name プロパティ
@@ -35,28 +38,23 @@ public:
 
     /// 初期化。
     void InternalInitialize(SwapchainMaster* swapchainMaster,
-        const ::vk::SwapchainKHR& swapchain, uint32_t uniqueId)
-    {
+        const ::vk::SwapchainKHR& swapchain, uint32_t uniqueId) {
         swapchainMaster_.reset(swapchainMaster);
         swapchain_ = swapchain;
         uniqueId_ = uniqueId_;
     }
 
     /// 初期化済みか。
-    bool InternalIsInitialized() const
-    { return swapchainMaster_.isValid();
-    }
+    bool InternalIsInitialized() const { return swapchainMaster_.isValid(); }
 
-    ::vk::SwapchainKHR InternalInstance() const
-    { return swapchain_;
-    }
+    ::vk::SwapchainKHR InternalInstance() const { return swapchain_; }
 
     /// ユニークID。古くなった Handle の Valid 判定で使う。
-    uint32_t InternalUniqueId() const { return uniqueId_;  }
+    uint32_t InternalUniqueId() const { return uniqueId_; }
     //@}
 
 protected:
-    /// ユーザーが誤って生成する事故を防ぐための protected-ctor。 
+    /// ユーザーが誤って生成する事故を防ぐための protected-ctor。
     Swapchain() {}
 
 private:

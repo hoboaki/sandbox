@@ -37,6 +37,13 @@ public:
 
     /// コンストラクタで渡した PhysicalDeviceIndex。
     int PhysicalDeviceIndex() const { return physicalDeviceIndex_; }
+    
+    /// 保持している Queue の総数。
+    int QueueCount() const { return queues_.count(); }
+
+    /// 指定番目の Queue の取得。
+    /// @param queueIndex [0, QueueCount())
+    gfx_low::Queue& Queue(int queueIndex) const;
     //@}
 
     /// @name 内部処理用API
@@ -48,7 +55,7 @@ private:
     gfx_low::System& system_;
     ::vk::Device device_;
     int physicalDeviceIndex_;
-    base::RuntimeAutoArray<Queue> queues_;
+    base::RuntimeAutoArray<gfx_low::Queue> queues_;
 };
 
 }  // namespace gfx_low

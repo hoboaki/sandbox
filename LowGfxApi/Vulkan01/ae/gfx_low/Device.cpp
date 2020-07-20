@@ -168,9 +168,10 @@ Device::Device(const DeviceCreateInfo& createInfo)
 
     // Queue オブジェクト作成
     for (int i = 0; i < queueCreateCount; ++i) {
-        queues_.add(
-            this, device_.getQueue(deviceQueueCreateInfos[i].queueFamilyIndex,
-                      indexInQueueTypeTable[i]));
+        queues_.add(this,
+            device_.getQueue(deviceQueueCreateInfos[i].queueFamilyIndex,
+                indexInQueueTypeTable[i]),
+            queueCreateInfos[i].Type());
     }
 }
 
@@ -179,6 +180,11 @@ Device::~Device() {
     queues_.clear();
     device_.destroy(nullptr);
     device_ = ::vk::Device();
+}
+
+//------------------------------------------------------------------------------
+gfx_low::Queue& Device::Queue(const int queueIndex) const {
+    return queues_[queueIndex];
 }
 
 }  // namespace gfx_low

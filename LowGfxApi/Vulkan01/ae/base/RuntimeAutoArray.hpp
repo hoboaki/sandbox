@@ -93,18 +93,7 @@ public:
     }
 
     /// 指定番目の要素にアクセス。
-    ValueType& at(const int aIndex)
-    {
-        if (mCount <= aIndex)
-        {
-            AE_BASE_ASSERT_LESS(aIndex, mCount);
-            return mPtr[0]; // fail safe code
-        }
-        return mPtr[aIndex];
-    }
-
-    /// 指定番目の要素にアクセス。
-    const ValueType& at(const int aIndex)const
+    ValueType& at(const int aIndex)const
     {
         if (mCount <= aIndex)
         {
@@ -276,8 +265,7 @@ public:
 
     /// @name 演算子オーバーロード
     //@{
-    ValueType& operator[](const int aIndex) { return at(aIndex); } ///< at() のエイリアス。
-    const ValueType& operator[](const int aIndex)const { return at(aIndex); } ///< at()const のエイリアス。
+    ValueType& operator[](const int aIndex)const { return at(aIndex); } ///< at()const のエイリアス。
     //@}
 
 private:
