@@ -26,9 +26,12 @@ namespace gfx_low {
 
 /// スワップチェインを管理するクラス。
 /// @details
-/// スワップチェインが使用するメモリ管理や、作り直し機能を提供する。
-/// Surface の概念があるプラットフォームでは Surface の生成・破棄も行う。
-/// ::ae::base::Screen １つにつき１つの SwapchainMaster を作る。
+/// スワップチェインが使用するメモリ管理や、作り直し機能を提供し、
+/// Surface の概念があるプラットフォームでは Surface の生成・破棄も行います。
+///
+/// ::ae::base::Screen １つにつき１つの SwapchainMaster を作る必要があります。
+///
+/// 本オブジェクトを破棄する時点で存在する Swapchain は自動的に破棄されます。
 class SwapchainMaster {
 public:
     /// @name コンストラクタとデストラクタ
@@ -47,8 +50,9 @@ public:
     //@{
     /// Swapchain を作成。
     /// @param oldSwapchain 新規作成する Swapchain に Present
-    /// 情報などを引き継ぎつつ破棄をする Swapchain。ここに渡した Swapchain
-    /// オブジェクトは使えなくなる。無効なハンドルを渡した場合、引き継ぎなどは行わない。
+    /// 情報などを引き継ぎつつ破棄をする Swapchain。無効なハンドルを渡した場合、引き継ぎなどは行わない。
+    /// @details 
+    /// oldSwapchain はこの関数呼び出し後 IsValid() == false となり使えなくなります。
     SwapchainHandle CreateSwapchain(const SwapchainCreateInfo& createInfo,
         const SwapchainHandle& oldSwapchain = SwapchainHandle());
 
