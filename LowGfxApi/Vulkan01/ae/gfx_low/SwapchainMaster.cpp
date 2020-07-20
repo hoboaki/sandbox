@@ -124,12 +124,14 @@ SwapchainHandle SwapchainMaster::CreateSwapchain(
     // If the format list includes just one entry of VK_FORMAT_UNDEFINED,
     // the surface has no preferred format.  Otherwise, at least one
     // supported format will be returned.
-    if (formatCount == 1 && surfFormats[0].format == vk::Format::eUndefined) {
-        format = vk::Format::eB8G8R8A8Unorm;
-    } else {
-        assert(formatCount >= 1);
-        format = surfFormats[0].format;
-    }
+    //if (formatCount == 1 && surfFormats[0].format == vk::Format::eUndefined) {
+    //    format = vk::Format::eB8G8R8A8Unorm;
+    //} else {
+    //    assert(formatCount >= 1);
+    //    format = surfFormats[0].format;
+    //}
+    format = createInfo.IsSrgbFormat() ? ::vk::Format::eR8G8B8A8Srgb
+                                       : ::vk::Format::eR8G8B8A8Unorm;
     color_space = surfFormats[0].colorSpace;
 
     // Check the surface capabilities and formats
