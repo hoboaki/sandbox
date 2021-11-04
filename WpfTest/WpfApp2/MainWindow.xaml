@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="On_UIReady">
+        Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -14,7 +14,7 @@
         <Grid Grid.Column="0" Background="Silver">
         </Grid>
         <Grid Grid.Column="1">
-            <Border Name="ControlHostElement" Width="200" Height="200" Background="Crimson"/>
+            <Border Name="ControlHostElement" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Crimson"/>
         </Grid>
     </Grid>
 </Window>

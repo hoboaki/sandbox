@@ -14,9 +14,5 @@ namespace WpfApp2
     /// </summary>
     public partial class App : Application
     {
-
-        [DllImport("comctl32.dll", EntryPoint = "InitCommonControls", CharSet = CharSet.Auto)]
-        public static extern void InitCommonControls();
-
     }
 }

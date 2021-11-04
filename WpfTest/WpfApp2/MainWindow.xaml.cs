@@ -41,13 +41,14 @@ namespace WpfApp2
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += On_UIReady;
         }
 
         private void On_UIReady(object sender, EventArgs e)
         {
             _app = Application.Current;
             _myWindow = _app.MainWindow;
-            _myWindow.SizeToContent = SizeToContent.WidthAndHeight;
+            //_myWindow.SizeToContent = SizeToContent.WidthAndHeight;
             _listControl = new ControlHost(ControlHostElement.ActualHeight, ControlHostElement.ActualWidth);
             ControlHostElement.Child = _listControl;
             _listControl.MessageHook += ControlMsgFilter;
