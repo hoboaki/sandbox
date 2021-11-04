@@ -17,6 +17,12 @@ namespace WpfApp2
        WsVscroll = 0x00200000,
        WsBorder = 0x00800000;
 
+        const uint SwpNosize = 0x0001;
+        const uint SwpNomove = 0x0002;
+        const uint SwpNozorder = 0x0004;
+
+        const int WmSize = 0x0005;
+
         private readonly int _hostHeight;
         private readonly int _hostWidth;
         private IntPtr _hwndHost;
@@ -59,6 +65,13 @@ namespace WpfApp2
         protected override IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             handled = false;
+            switch (msg)
+            {
+                case WmSize:
+                    // リストボックスのサイズを追従させる
+                    SetWindowPos(HwndListBox, IntPtr.Zero, 0, 0, (int)this.ActualWidth, (int)this.ActualHeight, SwpNomove | SwpNozorder);
+                    break;
+            }
             return IntPtr.Zero;
         }
 
@@ -82,5 +95,9 @@ namespace WpfApp2
 
         [DllImport("user32.dll", EntryPoint = "DestroyWindow", CharSet = CharSet.Unicode)]
         internal static extern bool DestroyWindow(IntPtr hwnd);
+
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowPos", CharSet = CharSet.Unicode)]
+        internal static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint flags);
     }
 }
